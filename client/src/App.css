@@ -1,3 +1,8 @@
+:root {
+  --background-color: #282a36;
+  --editor-background-color: #44475a;
+}
+
 .App {
   text-align: center;
 }
@@ -36,3 +41,10 @@
     transform: rotate(360deg);
   }
 }
+
+.flex-container-horizontal {
+  dislpay: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+

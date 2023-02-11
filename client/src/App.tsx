@@ -1,26 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Editor from "react-simple-code-editor";
+import {core} from 'prismjs/components'
 
 function App() {
-  return (
+    const [code, setCode] = useState('print("hello wrlod');
+
+    return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <Editor
+          onValueChange={() => {}}
+          highlight={code => {}}
+          value={code}/>
     </div>
-  );
+    );
 }
 
 export default App;
