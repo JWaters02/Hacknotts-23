@@ -11,6 +11,7 @@ interface CreateRoomResponse {
 
 interface HomePageProps {
     setIsInGame: (v: boolean) => void;
+    createRoom(): void;
 }
 
 async function createRoom(): Promise<CreateRoomResponse> {
@@ -22,7 +23,7 @@ async function createRoom(): Promise<CreateRoomResponse> {
         resolve({
             id: 0
         })
-    }, 1000));
+    }, 10));
 }
 
 async function onCreateButtonPress(setLoading: (loading: LoadingState) => void, setIsInGame: (v: boolean) => void) {
@@ -33,8 +34,6 @@ async function onCreateButtonPress(setLoading: (loading: LoadingState) => void, 
     // do webhook magic ???
 
     setLoading("loaded");
-
-    setIsInGame(true);
 }
 
 const HomePage: FC<HomePageProps> = (props) => {

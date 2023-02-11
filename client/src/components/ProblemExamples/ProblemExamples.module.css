@@ -1,0 +1,8 @@
+.ProblemExamples {
+
+}
+
+.ProblemExample {
+    display: flex;
+    justify-content: space-between;
+}
