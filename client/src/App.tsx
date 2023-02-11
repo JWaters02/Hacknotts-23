@@ -2,19 +2,21 @@ import React, {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Editor from "react-simple-code-editor";
-import {core} from 'prismjs/components'
+import {highlight, languages} from 'prismjs'
 
 function App() {
-    const [code, setCode] = useState('print("hello wrlod');
+    const [code, setCode] = useState('print("hello world")');
 
     return (
     <div className="App">
         <Editor
-          onValueChange={() => {}}
-          highlight={code => {}}
+          onValueChange={setCode}
+          highlight={code => highlight(code, languages.js, "js")}
           value={code}/>
     </div>
     );
 }
+
+
 
 export default App;
