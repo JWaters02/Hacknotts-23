@@ -1,19 +1,16 @@
 import React, {useState} from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Editor from "react-simple-code-editor";
-import {highlight, languages} from 'prismjs'
+import CodePane from "./components/CodePane/CodePane";
+import GamePage from "./components/GamePage/GamePage";
+import HomePage from "./components/HomePage/HomePage";
 
 function App() {
-    const [code, setCode] = useState('print("hello world")');
+    const [isInGame, setIsInGame] = useState(false);
 
     return (
-    <div className="App">
-        <Editor
-          onValueChange={setCode}
-          highlight={code => highlight(code, languages.js, "js")}
-          value={code}/>
-    </div>
+        <div className="App">
+            {isInGame ? <GamePage/> : <HomePage setIsInGame={setIsInGame}/>}
+        </div>
     );
 }
 
