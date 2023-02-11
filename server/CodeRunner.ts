@@ -2,7 +2,6 @@ import { exec } from 'child_process';
 import { Challenge, ClientMessage, MessageType, ServerMessage } from './types'
 import { WebSocket } from 'ws';
 
-
 export class CodeRunner {
     private challenges: Array<Challenge> = [];
 
