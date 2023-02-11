@@ -5,13 +5,15 @@ import ProblemPane from "../ProblemPane/ProblemPane";
 import CodePane from "../CodePane/CodePane";
 import ShopPane from "../ShopPane/ShopPane";
 
-interface GamePageProps {}
+interface GamePageProps {
+    sessionID: number
+}
 
-const GamePage: FC<GamePageProps> = () => {
+const GamePage: FC<GamePageProps> = (props) => {
     const [code, setCode] = useState("print('hello world!')");
     return <div className={styles.GamePage}>
         <Grid>
-            <Grid.Col span={4}><ProblemPane description={"write some code"} examples={["does it compile","does it work"]}/></Grid.Col>
+            <Grid.Col span={4}><p>{props.sessionID}</p><ProblemPane description={"write some code"} examples={["does it compile","does it work"]}/></Grid.Col>
             <Grid.Col span={4}><CodePane code={code} setCode={(code) => {
                 // send to backend here
 

@@ -10,7 +10,6 @@ interface CreateRoomResponse {
 }
 
 interface HomePageProps {
-    setIsInGame: (v: boolean) => void;
     createRoom(): void;
 }
 
@@ -26,10 +25,10 @@ async function createRoom(): Promise<CreateRoomResponse> {
     }, 10));
 }
 
-async function onCreateButtonPress(setLoading: (loading: LoadingState) => void, setIsInGame: (v: boolean) => void) {
+function onCreateButtonPress(setLoading: (loading: LoadingState) => void, createRoom: () => void) {
     setLoading("loading");
 
-    const res = await createRoom();
+    createRoom();
 
     // do webhook magic ???
 
@@ -40,7 +39,7 @@ const HomePage: FC<HomePageProps> = (props) => {
     const [loading, setLoading] = useState<LoadingState>("not");
 
     return <div className={styles.HomePage}>
-        <button onClick={() => onCreateButtonPress(setLoading, props.setIsInGame)}>Connect</button>
+        <button onClick={() => onCreateButtonPress(setLoading, props.createRoom)}>Connect</button>
         <p>{loading}</p>
     </div>;
 }
