@@ -6,8 +6,7 @@ const SERVER_URL = "";
 type LoadingState = "not" | "loading" | "loaded";
 
 interface CreateRoomResponse {
-    "id": number,
-    "url": string
+    "id": number
 }
 
 interface HomePageProps {
@@ -21,8 +20,7 @@ async function createRoom(): Promise<CreateRoomResponse> {
 
     return new Promise((resolve) => setTimeout(() => {
         resolve({
-            id: 0,
-            url: ""
+            id: 0
         })
     }, 1000));
 }
@@ -38,7 +36,7 @@ async function onCreateButtonPress(setLoading: (loading: LoadingState) => void) 
 }
 
 const HomePage: FC<HomePageProps> = (props) => {
-    const [loading, setLoading] = useState<LoadingState>();
+    const [loading, setLoading] = useState<LoadingState>("not");
 
     return <div className={styles.HomePage}>
         <button onClick={() => onCreateButtonPress(setLoading)}>Connect</button>
