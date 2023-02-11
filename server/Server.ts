@@ -35,7 +35,7 @@ type ClientMessage = {
 
 export class Server {
     private socket: WebSocket; // The main server websocket
-    private events: Array<Number>;
+    private events: Array<Function>;
 
     constructor(port: number) {
         this.socket = new WebSocket.Server({
@@ -66,7 +66,7 @@ export class Server {
     */
     private onClientMessage(clientSocket: WebSocket, message: string) {
         const json: ClientMessage = JSON.parse(message);
-        // this.events[json.type](clientSocket, message);
+        this.events[json.type](clientSocket, message);
     }
 
     private runExample(clientSocket: WebSocket) {
