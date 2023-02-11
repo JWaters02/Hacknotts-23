@@ -3,6 +3,7 @@ exports.__esModule = true;
 exports.Server = void 0;
 var ws_1 = require("ws");
 var types_1 = require("./types");
+var Obstacle_1 = require("./Obstacle");
 var SessionInstance = /** @class */ (function () {
     function SessionInstance(client1, client2) {
         this.client1 = client1;
@@ -24,6 +25,7 @@ var Server = /** @class */ (function () {
         this.events[types_1.MessageType.Example] = this.runExample.bind(this);
         this.events[types_1.MessageType.CreateSession] = this.createSession.bind(this);
         this.events[types_1.MessageType.JoinSession] = this.joinSession.bind(this);
+        this.events[types_1.MessageType.HandleServerSideObstacle] = this.handleServerSideObstacle.bind(this);
     }
     // This function is called once the client joins a session(game)
     Server.prototype.onClientConnect = function (clientSocket) {
@@ -35,7 +37,7 @@ var Server = /** @class */ (function () {
         clientSocket.on('close', function () {
             var session = _this.sessions.get(clientSocket);
             if (session !== undefined) {
-                var opponent = session.client1 === clientSocket ? session.client2 : session.client1;
+                var opponent = _this.getOpponent(clientSocket);
                 _this.sessions["delete"](clientSocket);
                 _this.sessions["delete"](opponent);
                 opponent.close();
@@ -62,11 +64,33 @@ var Server = /** @class */ (function () {
     */
     Server.prototype.onClientMessage = function (clientSocket, message) {
         var json = JSON.parse(message);
-        this.events[json.type](clientSocket, message);
+        console.log(json.type);
+        this.events[json.type](clientSocket, json);
     };
     Server.prototype.runExample = function (clientSocket) {
     };
-    Server.prototype.sendObstacle = function (clientSocket) {
+    Server.prototype.sendObstacle = function (clientSocket, json) {
+        if (json.type !== types_1.MessageType.Obstacle) {
+            return;
+        }
+        var opponent = this.getOpponent(clientSocket);
+        if (opponent !== null) {
+            opponent.send(JSON.stringify({ type: types_1.MessageType.Obstacle, code: json.code }));
+        }
+    };
+    Server.prototype.handleServerSideObstacle = function (clientSocket, json) {
+        console.log('handling server side obstacle');
+        console.log(json.type);
+        if (json.type !== types_1.MessageType.HandleServerSideObstacle) {
+            return;
+        }
+        console.log(json.obstacle);
+        console.log(json.code);
+        if (!(0, Obstacle_1.isObstacleServerSided)(json.obstacle)) {
+            return;
+        }
+        var newCode = (0, Obstacle_1.handleServerSideObstacle)(json.obstacle, json.code);
+        clientSocket.send(JSON.stringify({ type: types_1.MessageType.HandleServerSideObstacle, code: newCode }));
     };
     Server.prototype.submit = function (clientSocket, message) {
     };
@@ -90,6 +114,13 @@ var Server = /** @class */ (function () {
         var instance = new SessionInstance(opponent, clientSocket);
         this.sessions.set(clientSocket, instance);
         this.sessions.set(opponent, instance);
+    };
+    Server.prototype.getOpponent = function (clientSocket) {
+        var session = this.sessions.get(clientSocket);
+        if (session === undefined) {
+            return null;
+        }
+        return clientSocket === session.client1 ? session.client2 : session.client1;
     };
     return Server;
 }());
