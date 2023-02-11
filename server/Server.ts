@@ -1,6 +1,6 @@
 import { WebSocket } from 'ws';
 
-enum MessageType {
+export enum MessageType {
     Obstacle,
     Submit,
     Example,
@@ -9,6 +9,7 @@ enum MessageType {
 };
 
 interface ClientMessage {
+    sessionID: number,
     type: MessageType,
     data: Object
 };
@@ -21,16 +22,14 @@ export class Server {
             port: "" + port
         });
         this.socket.on('connection', this.onClientConnect.bind(this));
-        this.socket.on('message', this.onClientMessage.bind(this));
     }
 
     // This function is called once the client joins a session(game)
     private onClientConnect(clientSocket: WebSocket) {
         console.log('New Client Connected!');
-    }
-    
-    private onSessionCreate() {
-        const sessionID = this.createSession();
+        clientSocket.on('message', (message: string) => {
+            this.onClientMessage(clientSocket, message);
+        });
     }
 
     /*
@@ -40,8 +39,26 @@ export class Server {
         Essentially, any in-game communication between the server and the client will be
         handled inside this function.
     */
-    private onClientMessage(clientSocket: WebSocket) {
+    private onClientMessage(clientSocket: WebSocket, message: string) {
+        const json: ClientMessage = JSON.parse(message);
 
+        switch(json.type) {
+            case MessageType.Obstacle:
+
+                break;
+            case MessageType.Submit:
+
+                break;
+            case MessageType.Example:
+
+                break;
+            case MessageType.CreateSession:
+
+                break;
+            case MessageType.JoinSession:
+
+                break;
+        }
     }
 
     private runExample(clientSocket: WebSocket) {
@@ -56,9 +73,8 @@ export class Server {
 
     }
 
-    // Helper methods 
-    private createSession() {
-        return Math.floor(Math.random() * 1000);
+    private joinSession(clientSocket: WebSocket) {
+        
     }
 
 }
