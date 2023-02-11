@@ -1,13 +1,15 @@
 import { WebSocket } from 'ws';
-const express = require('express')
 
-enum MessageType {
+export enum MessageType {
     Obstacle,
     Submit,
-    Example
+    Example,
+    CreateSession,
+    JoinSession
 };
 
 interface ClientMessage {
+    sessionID: number,
     type: MessageType,
     data: Object
 };
@@ -20,24 +22,14 @@ export class Server {
             port: "" + port
         });
         this.socket.on('connection', this.onClientConnect.bind(this));
-        this.socket.on('message', this.onClientMessage.bind(this));
-
-        const app = express(); // The http server
-        app.get('/createSession', this.onSessionCreate.bind(this));
-
-        app.listen(port + 1, () => { console.log('Listening on port ' + port) });
     }
 
-    // HTTP API Methods
+    // This function is called once the client joins a session(game)
     private onClientConnect(clientSocket: WebSocket) {
         console.log('New Client Connected!');
-    }
-
-    // This function is called initially, once the 
-    private onSessionCreate(req: Object, res: Object) {
-        console.log('Here, the session will be created');
-        console.log(req);
-        console.log(res);
+        clientSocket.on('message', (message: string) => {
+            this.onClientMessage(clientSocket, message);
+        });
     }
 
     /*
@@ -47,20 +39,42 @@ export class Server {
         Essentially, any in-game communication between the server and the client will be
         handled inside this function.
     */
-    private onClientMessage(req: Object, res: Object) {
+    private onClientMessage(clientSocket: WebSocket, message: string) {
+        const json: ClientMessage = JSON.parse(message);
+
+        switch(json.type) {
+            case MessageType.Obstacle:
+
+                break;
+            case MessageType.Submit:
+
+                break;
+            case MessageType.Example:
+
+                break;
+            case MessageType.CreateSession:
+
+                break;
+            case MessageType.JoinSession:
+
+                break;
+        }
+    }
+
+    private runExample(clientSocket: WebSocket) {
 
     }
 
-    private runExample(req, res, clientSocket) {
+    private sendObstacle(clientSocket: WebSocket) {
 
     }
 
-    private sendObstacle(req, res, clientSocket) {
+    private submit(clientSocket: WebSocket) {
 
     }
 
-    private submit(req, res, clientSocket) {
-
+    private joinSession(clientSocket: WebSocket) {
+        
     }
 
 }
