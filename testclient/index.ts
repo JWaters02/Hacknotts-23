@@ -23,13 +23,10 @@ ws.onmessage = event => {
                 console.log(`Joined with a second client`);
                 ws2.send(JSON.stringify({type: MessageType.HandleServerSideObstacle, obstacle: ObstacleType.VariableRename, code: pythonCode}))
 const code = `
-def sayHello():
-    print('Hello')
-    print('This is being printed from a python function')
-
-sayHello()
+def add(a, b):
+    return a + b
 `;
-                ws2.send(JSON.stringify({type: MessageType.Example, code, exampleID: 0}));
+                ws2.send(JSON.stringify({type: MessageType.Challenge, code, challengeID: 0, testID: 0}));
             };
             break;
     }

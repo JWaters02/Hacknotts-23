@@ -1,10 +1,11 @@
 export enum MessageType {
     Obstacle = 0,
     Submit = 1,
-    Example = 2,
+    Challenge = 2,
     CreateSession = 3,
     JoinSession = 4,
     HandleServerSideObstacle = 5,
+    ChallengeResponse = 6,
 }
 
 export enum ObstacleType {
@@ -20,11 +21,13 @@ export type ClientMessage = {
     sessionID: number
 } | {
     type: MessageType.Submit,
+    challengeID: number,
     code: string
 } | {
-    type: MessageType.Example,
+    type: MessageType.Challenge,
+    testID: number,
     code: string,
-    exampleID: number,
+    challengeID: number,
 } | {
     type: MessageType.Obstacle,
     code: ObstacleType
@@ -32,4 +35,16 @@ export type ClientMessage = {
     type: MessageType.HandleServerSideObstacle,
     obstacle: ObstacleType,
     code: string
+};
+
+export type ServerMessage = {
+    type: MessageType.CreateSession,
+    sessionID: number
+} | {
+    type: MessageType.ChallengeResponse,
+    success: boolean
+};
+
+export interface Challenge {
+    tests: Array<string>
 };

@@ -28,7 +28,7 @@ export class Server {
         this.socket.on('connection', this.onClientConnect.bind(this));
         this.events[MessageType.Obstacle] = this.sendObstacle.bind(this);
         this.events[MessageType.Submit] = this.submit.bind(this);
-        this.events[MessageType.Example] = this.runExample.bind(this);
+        this.events[MessageType.Challenge] = this.runner.runTest.bind(this.runner);
         this.events[MessageType.CreateSession] = this.createSession.bind(this);
         this.events[MessageType.JoinSession] = this.joinSession.bind(this);
         this.events[MessageType.HandleServerSideObstacle] = this.handleServerSideObstacle.bind(this);
@@ -73,16 +73,6 @@ export class Server {
         this.events[json.type](clientSocket, json);
     }
 
-    private runExample(clientSocket: WebSocket, message: ClientMessage) {
-        if(message.type != MessageType.Example){
-            return;
-        }
-        const result = this.runner.runExample(message.exampleID, message.code);
-        if(result == true){
-            clientSocket.send(''); // TODO: Discuss interface to send data to clients
-        }
-    }
-
     private sendObstacle(clientSocket: WebSocket, json: ClientMessage) {
         if (json.type !== MessageType.Obstacle) {
             return;
@@ -104,7 +94,7 @@ export class Server {
         clientSocket.send(JSON.stringify({type: MessageType.HandleServerSideObstacle, code: newCode}));
     }
 
-    private submit(clientSocket: WebSocket, message) {
+    private submit(clientSocket: WebSocket, message: ClientMessage) {
 
     }
 
