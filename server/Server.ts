@@ -4,8 +4,8 @@ import express from 'express';
 export class Server {
     private socket: WebSocket; // The main server websocket
 
-    constructor(port: number) {
-        this.socket = new WebSocket.Server({port: '8080'});
+    constructor(port: string) {
+        this.socket = new WebSocket.Server( { port } );
         this.socket.on('connection', this.onClientConnect.bind(this));
 
         const app = express(); // The http server
