@@ -8,7 +8,13 @@ interface SubmitPaneProps {
 
 const SubmitPane: FC<SubmitPaneProps> = (props) => (
   <div className={styles.SubmitPane}>
-    <Flex>
+    <Flex
+        mih={50}
+        gap="md"
+        justify="center"
+        align="center"
+        direction="column"
+        wrap="nowrap">
         <Button>Submit Code</Button>
         <p>{props.output}</p>
     </Flex>
