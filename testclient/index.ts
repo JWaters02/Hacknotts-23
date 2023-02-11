@@ -18,7 +18,14 @@ ws.onmessage = event => {
             ws2.onopen = event => {
                 ws2.send(JSON.stringify({type: MessageType.JoinSession, sessionID: id}));
                 console.log(`Joined with a second client`);
-                ws2.send(JSON.stringify({type: MessageType.Example, code: `print('hello, world')`, exampleID: 0}));
+const code = `
+def sayHello():
+    print('Hello')
+    print('This is being printed from a python function')
+
+sayHello()
+`;
+                ws2.send(JSON.stringify({type: MessageType.Example, code, exampleID: 0}));
             };
             break;
     }

@@ -1,7 +1,7 @@
 import {WebSocket} from 'ws';
 import {ClientMessage, MessageType} from './types'
 import {handleServerSideObstacle, isObstacleServerSided} from "./Obstacle";
-
+import {CodeRunner} from './CodeRunner';
 
 class SessionInstance {
     client1: WebSocket;
@@ -19,6 +19,7 @@ export class Server {
     private pendingSessions: Map<number, WebSocket> = new Map();
     private sessions: Map<WebSocket, SessionInstance> = new Map();
     private events: Array<Function> = [];
+    private runner: CodeRunner = new CodeRunner();
 
     constructor(port: number) {
         this.socket = new WebSocket.Server({
@@ -47,7 +48,7 @@ export class Server {
                 this.sessions.delete(opponent);
                 opponent.close();
             } else {
-                let sessionID = null;
+                let sessionID: number | null = null;
                 this.pendingSessions.forEach((value, key) => {
                     if (value === clientSocket) {
                         sessionID = key;
@@ -69,11 +70,17 @@ export class Server {
     */
     private onClientMessage(clientSocket: WebSocket, message: string) {
         const json: ClientMessage = JSON.parse(message);
-        this.events[json.type](clientSocket, message);
+        this.events[json.type](clientSocket, json);
     }
 
-    private runExample(clientSocket: WebSocket) {
-
+    private runExample(clientSocket: WebSocket, message: ClientMessage) {
+        if(message.type != MessageType.Example){
+            return;
+        }
+        const result = this.runner.runExample(message.exampleID, message.code);
+        if(result == true){
+            clientSocket.send(''); // TODO: Discuss interface to send data to clients
+        }
     }
 
     private sendObstacle(clientSocket: WebSocket, json: ClientMessage) {

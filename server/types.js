@@ -8,6 +8,7 @@ var MessageType;
     MessageType[MessageType["Example"] = 2] = "Example";
     MessageType[MessageType["CreateSession"] = 3] = "CreateSession";
     MessageType[MessageType["JoinSession"] = 4] = "JoinSession";
+    MessageType[MessageType["HandleServerSideObstacle"] = 5] = "HandleServerSideObstacle";
 })(MessageType = exports.MessageType || (exports.MessageType = {}));
 var ObstacleType;
 (function (ObstacleType) {
