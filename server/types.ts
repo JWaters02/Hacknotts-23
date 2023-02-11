@@ -43,6 +43,12 @@ export type ServerMessage = {
 } | {
     type: MessageType.ChallengeResponse,
     success: boolean
+} | {
+    type: MessageType.Obstacle,
+    code: ObstacleType
+} | {
+    type: MessageType.HandleServerSideObstacle,
+    code: string
 };
 
 export interface Challenge {
