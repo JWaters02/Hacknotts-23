@@ -1,0 +1,6 @@
+class Server {
+    
+    start() {
+
+    }
+}
