@@ -48,13 +48,13 @@ else:
             isProcessAlive = false;
             if(outputs[outputs.length-1] == 'TRUE\n'){
                 clientSocket.send(JSON.stringify({
-                    type: MessageType.ChallengeResponse,
+                    type: MessageType.Response,
                     success: true
                 }));
                 console.log('program works!');
             }else{
                 clientSocket.send(JSON.stringify({
-                    type: MessageType.ChallengeResponse,
+                    type: MessageType.Response,
                     success: false
                 }));
                 console.log('program does not work :(');
