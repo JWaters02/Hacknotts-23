@@ -1,33 +1,29 @@
 "use strict";
 exports.__esModule = true;
-exports.Server = exports.ObstacleType = exports.MessageType = void 0;
+exports.Server = void 0;
 var ws_1 = require("ws");
-var MessageType;
-(function (MessageType) {
-    MessageType[MessageType["Obstacle"] = 0] = "Obstacle";
-    MessageType[MessageType["Submit"] = 1] = "Submit";
-    MessageType[MessageType["Example"] = 2] = "Example";
-    MessageType[MessageType["CreateSession"] = 3] = "CreateSession";
-    MessageType[MessageType["JoinSession"] = 4] = "JoinSession";
-})(MessageType = exports.MessageType || (exports.MessageType = {}));
-;
-var ObstacleType;
-(function (ObstacleType) {
-    ObstacleType[ObstacleType["FontChange"] = 0] = "FontChange";
-    ObstacleType[ObstacleType["VariableRename"] = 1] = "VariableRename";
-    ObstacleType[ObstacleType["OneLiner"] = 2] = "OneLiner";
-})(ObstacleType = exports.ObstacleType || (exports.ObstacleType = {}));
+var types_1 = require("./types");
+var SessionInstance = /** @class */ (function () {
+    function SessionInstance(client1, client2) {
+        this.client1 = client1;
+        this.client2 = client2;
+    }
+    return SessionInstance;
+}());
 var Server = /** @class */ (function () {
     function Server(port) {
+        this.pendingSessions = new Map();
+        this.sessions = new Map();
+        this.events = [];
         this.socket = new ws_1.WebSocket.Server({
             port: "" + port
         });
         this.socket.on('connection', this.onClientConnect.bind(this));
-        this.events[MessageType.Obstacle] = this.sendObstacle.bind(this);
-        this.events[MessageType.Submit] = this.submit.bind(this);
-        this.events[MessageType.Example] = this.runExample.bind(this);
-        this.events[MessageType.CreateSession] = this.createSession.bind(this);
-        this.events[MessageType.JoinSession] = this.joinSession.bind(this);
+        this.events[types_1.MessageType.Obstacle] = this.sendObstacle.bind(this);
+        this.events[types_1.MessageType.Submit] = this.submit.bind(this);
+        this.events[types_1.MessageType.Example] = this.runExample.bind(this);
+        this.events[types_1.MessageType.CreateSession] = this.createSession.bind(this);
+        this.events[types_1.MessageType.JoinSession] = this.joinSession.bind(this);
     }
     // This function is called once the client joins a session(game)
     Server.prototype.onClientConnect = function (clientSocket) {
@@ -35,6 +31,26 @@ var Server = /** @class */ (function () {
         console.log('New Client Connected!');
         clientSocket.on('message', function (message) {
             _this.onClientMessage(clientSocket, message);
+        });
+        clientSocket.on('close', function () {
+            var session = _this.sessions.get(clientSocket);
+            if (session !== undefined) {
+                var opponent = session.client1 === clientSocket ? session.client2 : session.client1;
+                _this.sessions["delete"](clientSocket);
+                _this.sessions["delete"](opponent);
+                opponent.close();
+            }
+            else {
+                var sessionID_1 = null;
+                _this.pendingSessions.forEach(function (value, key) {
+                    if (value === clientSocket) {
+                        sessionID_1 = key;
+                    }
+                });
+                if (sessionID_1 !== null) {
+                    _this.pendingSessions["delete"](sessionID_1);
+                }
+            }
         });
     };
     /*
@@ -55,8 +71,25 @@ var Server = /** @class */ (function () {
     Server.prototype.submit = function (clientSocket, message) {
     };
     Server.prototype.createSession = function (clientSocket) {
+        var sessionID = Math.floor(1000 * Math.random());
+        this.pendingSessions.set(sessionID, clientSocket);
+        clientSocket.send(JSON.stringify({ type: types_1.MessageType.CreateSession, sessionID: sessionID }));
     };
-    Server.prototype.joinSession = function (clientSocket) {
+    Server.prototype.joinSession = function (clientSocket, json) {
+        if (json.type !== types_1.MessageType.JoinSession) {
+            return;
+        }
+        if (this.sessions.has(clientSocket)) {
+            return;
+        }
+        var opponent = this.pendingSessions.get(json.sessionID);
+        if (opponent === undefined) {
+            return;
+        }
+        this.pendingSessions["delete"](json.sessionID);
+        var instance = new SessionInstance(opponent, clientSocket);
+        this.sessions.set(clientSocket, instance);
+        this.sessions.set(opponent, instance);
     };
     return Server;
 }());

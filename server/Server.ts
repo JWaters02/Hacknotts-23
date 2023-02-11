@@ -2,9 +2,22 @@ import { WebSocket } from 'ws';
 import { ClientMessage, MessageType } from './types'
 
 
+class SessionInstance {
+    client1: WebSocket;
+    client2: WebSocket;
+
+    constructor(client1: WebSocket, client2: WebSocket) {
+        this.client1 = client1;
+        this.client2 = client2;
+    }
+
+}
+
 export class Server {
     private socket: WebSocket; // The main server websocket
-    private events: Array<Function>;
+    private pendingSessions: Map<number, WebSocket> = new Map();
+    private sessions: Map<WebSocket, SessionInstance> = new Map();
+    private events: Array<Function> = [];
 
     constructor(port: number) {
         this.socket = new WebSocket.Server({
@@ -23,6 +36,25 @@ export class Server {
         console.log('New Client Connected!');
         clientSocket.on('message', (message: string) => {
             this.onClientMessage(clientSocket, message);
+        });
+        clientSocket.on('close', () => {
+            const session = this.sessions.get(clientSocket);
+            if (session !== undefined) {
+                const opponent: WebSocket = session.client1 === clientSocket ? session.client2 : session.client1;
+                this.sessions.delete(clientSocket);
+                this.sessions.delete(opponent);
+                opponent.close();
+            } else {
+                let sessionID = null;
+                this.pendingSessions.forEach((value, key) => {
+                    if (value === clientSocket) {
+                        sessionID = key;
+                    }
+                });
+                if (sessionID !== null) {
+                    this.pendingSessions.delete(sessionID);
+                }
+            }
         });
     }
 
@@ -51,11 +83,26 @@ export class Server {
     }
 
     private createSession(clientSocket: WebSocket) {
-        
+        const sessionID = Math.floor(1000 * Math.random());
+        this.pendingSessions.set(sessionID, clientSocket);
+        clientSocket.send(JSON.stringify({type: MessageType.CreateSession, sessionID}));
     }
 
-    private joinSession(clientSocket: WebSocket) {
-        
+    private joinSession(clientSocket: WebSocket, json: ClientMessage) {
+        if (json.type !== MessageType.JoinSession) {
+            return;
+        }
+        if (this.sessions.has(clientSocket)) {
+            return;
+        }
+        const opponent = this.pendingSessions.get(json.sessionID);
+        if (opponent === undefined) {
+            return;
+        }
+        this.pendingSessions.delete(json.sessionID);
+        const instance = new SessionInstance(opponent, clientSocket);
+        this.sessions.set(clientSocket, instance);
+        this.sessions.set(opponent, instance);
     }
 
 }
