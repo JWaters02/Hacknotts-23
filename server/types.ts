@@ -3,7 +3,8 @@ export enum MessageType {
     Submit = 1,
     Example = 2,
     CreateSession = 3,
-    JoinSession = 4
+    JoinSession = 4,
+    HandleServerSideObstacle = 5,
 }
 
 export enum ObstacleType {
@@ -18,7 +19,6 @@ export type ClientMessage = {
     type: MessageType.JoinSession,
     sessionID: number
 } | {
-    sessionID: number,
     type: MessageType.Submit,
     code: string
 } | {
@@ -26,7 +26,10 @@ export type ClientMessage = {
     code: string,
     exampleID: number,
 } | {
-    sessionID: number,
     type: MessageType.Obstacle,
     code: ObstacleType
+} | {
+    type: MessageType.HandleServerSideObstacle,
+    obstacle: ObstacleType,
+    code: string
 };

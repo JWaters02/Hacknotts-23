@@ -1,5 +1,6 @@
-import { WebSocket } from 'ws';
-import { ClientMessage, MessageType } from './types'
+import {WebSocket} from 'ws';
+import {ClientMessage, MessageType} from './types'
+import {handleServerSideObstacle, isObstacleServerSided} from "./Obstacle";
 
 
 class SessionInstance {
@@ -29,6 +30,7 @@ export class Server {
         this.events[MessageType.Example] = this.runExample.bind(this);
         this.events[MessageType.CreateSession] = this.createSession.bind(this);
         this.events[MessageType.JoinSession] = this.joinSession.bind(this);
+        this.events[MessageType.HandleServerSideObstacle] = this.handleServerSideObstacle.bind(this);
     }
 
     // This function is called once the client joins a session(game)
@@ -40,7 +42,7 @@ export class Server {
         clientSocket.on('close', () => {
             const session = this.sessions.get(clientSocket);
             if (session !== undefined) {
-                const opponent: WebSocket = session.client1 === clientSocket ? session.client2 : session.client1;
+                const opponent = this.getOpponent(clientSocket);
                 this.sessions.delete(clientSocket);
                 this.sessions.delete(opponent);
                 opponent.close();
@@ -74,8 +76,25 @@ export class Server {
 
     }
 
-    private sendObstacle(clientSocket: WebSocket) {
+    private sendObstacle(clientSocket: WebSocket, json: ClientMessage) {
+        if (json.type !== MessageType.Obstacle) {
+            return;
+        }
+        const opponent = this.getOpponent(clientSocket);
+        if (opponent !== null) {
+            opponent.send(JSON.stringify({type: MessageType.Obstacle, code: json.code}));
+        }
+    }
 
+    private handleServerSideObstacle(clientSocket: WebSocket, json: ClientMessage) {
+        if (json.type !== MessageType.HandleServerSideObstacle) {
+            return;
+        }
+        if (!isObstacleServerSided(json.obstacle)) {
+            return;
+        }
+        const newCode = handleServerSideObstacle(json.obstacle, json.code);
+        clientSocket.send(JSON.stringify({type: MessageType.HandleServerSideObstacle, code: newCode}));
     }
 
     private submit(clientSocket: WebSocket, message) {
@@ -103,6 +122,14 @@ export class Server {
         const instance = new SessionInstance(opponent, clientSocket);
         this.sessions.set(clientSocket, instance);
         this.sessions.set(opponent, instance);
+    }
+
+    private getOpponent(clientSocket: WebSocket): WebSocket | null {
+        const session = this.sessions.get(clientSocket);
+        if (session === undefined) {
+            return null;
+        }
+        return clientSocket === session.client1 ? session.client2 : session.client1;
     }
 
 }
