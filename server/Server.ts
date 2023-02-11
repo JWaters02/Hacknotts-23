@@ -94,9 +94,13 @@ export class Server {
     }
 
     private handleServerSideObstacle(clientSocket: WebSocket, json: ClientMessage) {
+        console.log('handling server side obstacle');
+        console.log(json.type);
         if (json.type !== MessageType.HandleServerSideObstacle) {
             return;
         }
+        console.log(json.obstacle);
+        console.log(json.code);
         if (!isObstacleServerSided(json.obstacle)) {
             return;
         }
