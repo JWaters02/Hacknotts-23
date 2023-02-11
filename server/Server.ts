@@ -8,20 +8,45 @@ export enum MessageType {
     JoinSession
 };
 
-interface ClientMessage {
+export enum ObstacleType {
+    FontChange,
+    VariableRename,
+    OneLiner
+}
+
+type ClientMessage = {
+    type: MessageType.CreateSession,
+} | {
+    type: MessageType.JoinSession,
+    sessionID: number
+} | {
     sessionID: number,
-    type: MessageType,
-    data: Object
+    type: MessageType.Submit,
+    code: string
+} | {
+    type: MessageType.Example,
+    code: string,
+    exampleID: number,
+} | {
+    sessionID: number,
+    type: MessageType.Obstacle,
+    code: ObstacleType
 };
 
 export class Server {
     private socket: WebSocket; // The main server websocket
+    private events: Array<Number>;
 
     constructor(port: number) {
         this.socket = new WebSocket.Server({
             port: "" + port
         });
         this.socket.on('connection', this.onClientConnect.bind(this));
+        this.events[MessageType.Obstacle] = this.sendObstacle.bind(this);
+        this.events[MessageType.Submit] = this.submit.bind(this);
+        this.events[MessageType.Example] = this.runExample.bind(this);
+        this.events[MessageType.CreateSession] = this.createSession.bind(this);
+        this.events[MessageType.JoinSession] = this.joinSession.bind(this);
     }
 
     // This function is called once the client joins a session(game)
@@ -41,24 +66,7 @@ export class Server {
     */
     private onClientMessage(clientSocket: WebSocket, message: string) {
         const json: ClientMessage = JSON.parse(message);
-
-        switch(json.type) {
-            case MessageType.Obstacle:
-
-                break;
-            case MessageType.Submit:
-
-                break;
-            case MessageType.Example:
-
-                break;
-            case MessageType.CreateSession:
-
-                break;
-            case MessageType.JoinSession:
-
-                break;
-        }
+        // this.events[json.type](clientSocket, message);
     }
 
     private runExample(clientSocket: WebSocket) {
@@ -69,8 +77,12 @@ export class Server {
 
     }
 
-    private submit(clientSocket: WebSocket) {
+    private submit(clientSocket: WebSocket, message) {
 
+    }
+
+    private createSession(clientSocket: WebSocket) {
+        
     }
 
     private joinSession(clientSocket: WebSocket) {
