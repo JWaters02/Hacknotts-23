@@ -1,9 +1,10 @@
 import React, {FC, useEffect, useState} from 'react';
 import styles from './HomePage.module.css';
+import {Loader} from "@mantine/core";
 
 const SERVER_URL = "";
 
-type LoadingState = "not" | "loading" | "loaded";
+type LoadingState = "not" | "loading";
 
 interface CreateRoomResponse {
     "id": number
@@ -29,10 +30,6 @@ function onCreateButtonPress(setLoading: (loading: LoadingState) => void, create
     setLoading("loading");
 
     createRoom();
-
-    // do webhook magic ???
-
-    setLoading("loaded");
 }
 
 const HomePage: FC<HomePageProps> = (props) => {
@@ -40,7 +37,7 @@ const HomePage: FC<HomePageProps> = (props) => {
 
     return <div className={styles.HomePage}>
         <button onClick={() => onCreateButtonPress(setLoading, props.createRoom)}>Connect</button>
-        <p>{loading}</p>
+        {loading === "not" ? <div style={{height: "37.33px"}}></div> : <Loader variant={"bars"}/> }
     </div>;
 }
 
