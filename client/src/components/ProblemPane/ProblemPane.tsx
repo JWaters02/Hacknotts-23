@@ -1,11 +1,17 @@
 import React, { FC } from 'react';
 import styles from './ProblemPane.module.css';
+import ProblemDescription from "../ProblemDescription/ProblemDescription";
+import ProblemExamples from "../ProblemExamples/ProblemExamples";
 
-interface ProblemPaneProps {}
+interface ProblemPaneProps {
+    description: string,
+    examples: string[]
+}
 
-const ProblemPane: FC<ProblemPaneProps> = () => (
+const ProblemPane: FC<ProblemPaneProps> = (props) => (
   <div className={styles.ProblemPane}>
-    ProblemPane Component
+      <ProblemDescription description={props.description}/>
+      <ProblemExamples examples={props.examples}/>
   </div>
 );
 

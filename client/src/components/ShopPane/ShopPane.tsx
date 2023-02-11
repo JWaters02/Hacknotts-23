@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 import styles from './ShopPane.module.css';
+import {Grid, MantineProvider} from "@mantine/core";
+import ObstacleList from "../ObstacleList/ObstacleList";
 
 interface ShopPaneProps {}
 

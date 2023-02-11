@@ -25,7 +25,7 @@ async function createRoom(): Promise<CreateRoomResponse> {
     }, 1000));
 }
 
-async function onCreateButtonPress(setLoading: (loading: LoadingState) => void) {
+async function onCreateButtonPress(setLoading: (loading: LoadingState) => void, setIsInGame: (v: boolean) => void) {
     setLoading("loading");
 
     const res = await createRoom();
@@ -33,13 +33,15 @@ async function onCreateButtonPress(setLoading: (loading: LoadingState) => void) 
     // do webhook magic ???
 
     setLoading("loaded");
+
+    setIsInGame(true);
 }
 
 const HomePage: FC<HomePageProps> = (props) => {
     const [loading, setLoading] = useState<LoadingState>("not");
 
     return <div className={styles.HomePage}>
-        <button onClick={() => onCreateButtonPress(setLoading)}>Connect</button>
+        <button onClick={() => onCreateButtonPress(setLoading, props.setIsInGame)}>Connect</button>
         <p>{loading}</p>
     </div>;
 }
