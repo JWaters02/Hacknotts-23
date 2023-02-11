@@ -64,7 +64,6 @@ var Server = /** @class */ (function () {
     */
     Server.prototype.onClientMessage = function (clientSocket, message) {
         var json = JSON.parse(message);
-        console.log(json.type);
         this.events[json.type](clientSocket, json);
     };
     Server.prototype.runExample = function (clientSocket) {
@@ -79,13 +78,9 @@ var Server = /** @class */ (function () {
         }
     };
     Server.prototype.handleServerSideObstacle = function (clientSocket, json) {
-        console.log('handling server side obstacle');
-        console.log(json.type);
         if (json.type !== types_1.MessageType.HandleServerSideObstacle) {
             return;
         }
-        console.log(json.obstacle);
-        console.log(json.code);
         if (!(0, Obstacle_1.isObstacleServerSided)(json.obstacle)) {
             return;
         }

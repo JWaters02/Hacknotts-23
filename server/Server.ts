@@ -69,7 +69,6 @@ export class Server {
     */
     private onClientMessage(clientSocket: WebSocket, message: string) {
         const json: ClientMessage = JSON.parse(message);
-        console.log(json.type);
         this.events[json.type](clientSocket, json);
     }
 
@@ -88,13 +87,9 @@ export class Server {
     }
 
     private handleServerSideObstacle(clientSocket: WebSocket, json: ClientMessage) {
-        console.log('handling server side obstacle');
-        console.log(json.type);
         if (json.type !== MessageType.HandleServerSideObstacle) {
             return;
         }
-        console.log(json.obstacle);
-        console.log(json.code);
         if (!isObstacleServerSided(json.obstacle)) {
             return;
         }

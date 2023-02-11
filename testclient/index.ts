@@ -1,8 +1,11 @@
 
+import { readFileSync } from 'fs';
 import { WebSocket } from 'ws';
-import {MessageType} from '../server/types'
+import {MessageType, ObstacleType} from '../server/types'
 
 const PORT = 8080
+
+const pythonCode = readFileSync('test_code.py').toString();
 
 const ws = new WebSocket(`ws://localhost:${PORT}`);
 ws.onopen = event => {
@@ -18,6 +21,7 @@ ws.onmessage = event => {
             ws2.onopen = event => {
                 ws2.send(JSON.stringify({type: MessageType.JoinSession, sessionID: id}));
                 console.log(`Joined with a second client`);
+                ws2.send(JSON.stringify({type: MessageType.HandleServerSideObstacle, obstacle: ObstacleType.VariableRename, code: pythonCode}))
             };
             break;
     }
