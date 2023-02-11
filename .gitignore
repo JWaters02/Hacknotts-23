@@ -1,0 +1,4 @@
+node_modules/
+testclient/**/*.js
+server/**/*.js
+.idea/

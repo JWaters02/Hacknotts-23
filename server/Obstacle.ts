@@ -18,14 +18,11 @@ export function handleServerSideObstacle(obstacle: ObstacleType, code: string): 
 
 export function renameVariables(code: string): string {
     const varTokens = [];
-    let indent = '  ';
     parser.parse(code).iterate({enter: node => {
-        // console.log(indent + node.type.name);
-        indent += '  ';
         if (node.type.name === 'VariableName' || node.type.name === 'PropertyName') {
             varTokens.push({from: node.from, to: node.to});
         }
-    }, leave: node => {indent = indent.slice(2);}});
+    }});
     const varNamesSet = new Set<string>();
     for (const token of varTokens) {
         varNamesSet.add(code.slice(token.from, token.to));
