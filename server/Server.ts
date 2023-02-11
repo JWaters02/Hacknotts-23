@@ -113,6 +113,10 @@ export class Server {
         }
         const opponent = this.pendingSessions.get(json.sessionID);
         if (opponent === undefined) {
+            clientSocket.send(JSON.stringify({
+                type: MessageType.Response,
+                success: false
+            }));
             return;
         }
         this.pendingSessions.delete(json.sessionID);

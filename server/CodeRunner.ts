@@ -35,7 +35,7 @@ else:
                 prcs.kill('SIGINT');
                 console.log('Killed process because it took too long');
                 clientSocket.send(JSON.stringify({
-                    type: MessageType.ChallengeResponse,
+                    type: MessageType.Response,
                     success: false
                 }));
             }
