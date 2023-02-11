@@ -1,6 +1,6 @@
 
 import { WebSocket } from 'ws';
-import {MessageType} from '../server/types'
+import {MessageType} from '../server/types';
 
 const PORT = 8080
 
@@ -18,6 +18,7 @@ ws.onmessage = event => {
             ws2.onopen = event => {
                 ws2.send(JSON.stringify({type: MessageType.JoinSession, sessionID: id}));
                 console.log(`Joined with a second client`);
+                ws2.send(JSON.stringify({type: MessageType.Example, code: `print('hello, world')`, exampleID: 0}));
             };
             break;
     }
