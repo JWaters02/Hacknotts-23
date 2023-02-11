@@ -1,37 +1,6 @@
 import { WebSocket } from 'ws';
+import { ClientMessage, MessageType } from './types'
 
-export enum MessageType {
-    Obstacle,
-    Submit,
-    Example,
-    CreateSession,
-    JoinSession
-};
-
-export enum ObstacleType {
-    FontChange,
-    VariableRename,
-    OneLiner
-}
-
-type ClientMessage = {
-    type: MessageType.CreateSession,
-} | {
-    type: MessageType.JoinSession,
-    sessionID: number
-} | {
-    sessionID: number,
-    type: MessageType.Submit,
-    code: string
-} | {
-    type: MessageType.Example,
-    code: string,
-    exampleID: number,
-} | {
-    sessionID: number,
-    type: MessageType.Obstacle,
-    code: ObstacleType
-};
 
 export class Server {
     private socket: WebSocket; // The main server websocket
