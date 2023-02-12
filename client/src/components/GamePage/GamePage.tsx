@@ -17,6 +17,7 @@ interface GamePageProps {
     submit(): void
     states: TestState[]
     submitTest(id: number): void
+    totalPoints: number
 }
 
 const GamePage: FC<GamePageProps> = (props) => {
@@ -29,7 +30,7 @@ const GamePage: FC<GamePageProps> = (props) => {
                 // update internal state
                 props.setCode(code);
             }}/></Grid.Col>
-            <Grid.Col span={3}><ShopPane sendObstacle={props.sendObstacle}/></Grid.Col>
+            <Grid.Col span={3}><ShopPane totalPoints={props.totalPoints} sendObstacle={props.sendObstacle}/></Grid.Col>
         </Grid>
     </div>
 }

@@ -69,6 +69,7 @@ function App() {
         <div className="App">
             <MantineProvider theme={{ colorScheme: theme as any}} withGlobalStyles withNormalizeCSS>
                 {isInGame ? <GamePage
+                    totalPoints={10}
                     sendObstacle={(type) => {
                         sendToServer({type: MessageType.Obstacle, obstacle: type });
                     }}
