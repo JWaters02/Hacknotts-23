@@ -96,7 +96,7 @@ export class CodeRunner {
                 console.log('Killed process because it took too long');
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
-                    challengeID: message.challengeID,
+                    testID: message.testID,
                     output: stdout.replace(FAIL, ''),
                     success: false
                 }));
