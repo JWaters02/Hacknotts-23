@@ -11,18 +11,19 @@ interface GamePageProps {
     output: string
     sendObstacle(type: ObstacleType): void
     isHidden: boolean
+    code: string
+    setCode(s: string): void
 }
 
 const GamePage: FC<GamePageProps> = (props) => {
-    const [code, setCode] = useState("print('hello world!')");
     return <div className={styles.GamePage}>
         <Grid>
             <Grid.Col span={4}><p>{props.sessionID}</p><ProblemPane description={"write some code"} examples={["does it compile","does it work"]}/></Grid.Col>
-            <Grid.Col span={4}><CodePane isHidden={props.isHidden} output={props.output} code={code} setCode={(code) => {
+            <Grid.Col span={4}><CodePane isHidden={props.isHidden} output={props.output} code={props.code} setCode={(code) => {
                 // send to backend here
 
                 // update internal state
-                setCode(code);
+                props.setCode(code);
             }}/></Grid.Col>
             <Grid.Col span={3}><ShopPane sendObstacle={props.sendObstacle}/></Grid.Col>
         </Grid>
