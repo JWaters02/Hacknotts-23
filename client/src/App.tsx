@@ -5,7 +5,7 @@ import GamePage from "./components/GamePage/GamePage";
 import HomePage from "./components/HomePage/HomePage";
 import {MantineProvider} from "@mantine/core";
 import useWebSocket from "react-use-websocket";
-import {isServerSide, MessageType, ServerMessage} from "./types";
+import {ClientMessage, isServerSide, MessageType, ServerMessage} from "./types";
 
 function App() {
     const [isInGame, setIsInGame] = useState(false);
@@ -19,9 +19,15 @@ function App() {
 
     const { sendMessage, lastMessage } = useWebSocket("ws://localhost:8080");
 
+    function sendToServer(message: ClientMessage) {
+        console.log(message);
+        sendMessage(JSON.stringify(message))
+    }
+
     useEffect(() => {
         if (lastMessage !== null) {
             const message: ServerMessage = JSON.parse(lastMessage.data);
+            console.log(message);
             if (message.type === MessageType.CreateSession) {
                 setTimeout(() => {
                     setSessionID(message.sessionID);
@@ -35,24 +41,49 @@ function App() {
             else if (message.type === MessageType.Obstacle) {
                 if (isServerSide(message.obstacle)) {
                     setIsHidden(true);
-                    sendMessage(JSON.stringify({type: MessageType.HandleServerSideObstacle, code: code}))
+                    sendToServer({type: MessageType.HandleServerSideObstacle, obstacle: message.obstacle, code: code});
                 }
             }
             else if (message.type === MessageType.HandleServerSideObstacle) {
                 setCode(message.code);
                 setIsHidden(false);
             }
+            else if (message.type === MessageType.Response) {
+                setSessionID(message.sessionID)
+                setIsInGame(true);
+            }
         }
-    }, [lastMessage]);
+    }, [lastMessage, sendMessage]);
 
     return (
         <div className="App">
             <MantineProvider theme={{ colorScheme: themeContext as any}} withGlobalStyles withNormalizeCSS>
-                {isInGame ? <GamePage sendObstacle={(type) => {
-                    sendMessage(JSON.stringify({type: MessageType.Obstacle, obstacle: type }))
-                }} isHidden={isHidden} output={output} sessionID={sessionID ? sessionID : -1} code={code} setCode={setCode}/> : <HomePage createRoom={() => {
-                    sendMessage(JSON.stringify({type: MessageType.CreateSession}));
-                }}/>}
+                {isInGame ? <GamePage
+                    sendObstacle={(type) => {
+                        sendToServer({type: MessageType.Obstacle, obstacle: type });
+                    }}
+                    isHidden={isHidden}
+                    output={output}
+                    sessionID={sessionID ? sessionID : -1}
+                    code={code}
+                    setCode={setCode}
+                /> :
+                <HomePage
+                    createRoom={
+                        () => {
+                            sendToServer({
+                                type: MessageType.CreateSession,
+                            });
+                        }}
+                    joinRoom={
+                        (id) => {
+                            sendToServer({
+                                type: MessageType.JoinSession,
+                                sessionID: id
+                            });
+                        }
+                    }
+                />}
             </MantineProvider>
         </div>
     );
