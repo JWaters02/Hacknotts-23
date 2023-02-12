@@ -10,8 +10,7 @@ export enum MessageType {
 
 export enum ObstacleType {
     FontChange,
-    VariableRename,
-    OneLiner
+    VariableRename
 }
 
 export type ClientMessage = {
