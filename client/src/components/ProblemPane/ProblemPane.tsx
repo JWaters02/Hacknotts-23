@@ -10,18 +10,16 @@ interface ProblemPaneProps {
 }
 
 interface ProblemPaneProps {
-    description: string,
-    examples: string[]
-
     states: TestState[]
     submitTest(id: number): void
+    challengeID: number
 }
 
 const ProblemPane: FC<ProblemPaneProps> = (props) => (
   <div className={styles.ProblemPane}>
       <Title order={1}>Problem</Title>
-      <ProblemDescription description={props.description}/>
-      <ProblemExamples submitTest={props.submitTest} examples={props.examples} states={props.states}/>
+      <ProblemDescription challengeID={props.challengeID}/>
+      <ProblemExamples submitTest={props.submitTest} challengeID={props.challengeID} states={props.states}/>
   </div>
 );
 

@@ -4,6 +4,13 @@ import {Button} from "@mantine/core";
 
 export type TestState = "unknown" | "success" | "fail";
 
+const examples = [
+    ["'listen', 'silent'", "'banana', 'fanta'"],
+    ["4, 5", "1, 1"],
+    ["'hello'", "'hola'"],
+    ["5.83, 10", "7.25, 10"]
+]
+
 interface ProblemExampleProps {
     input: string
     state: TestState
@@ -27,15 +34,14 @@ const ProblemExample: FC<ProblemExampleProps> = (props) => {
 }
 
 interface ProblemExamplesProps {
-    examples: string[]
-
     states: TestState[]
     submitTest(id: number): void
+    challengeID: number
 }
 
 const ProblemExamples: FC<ProblemExamplesProps> = (props) => (
   <div className={styles.ProblemExamples}>
-      {props.examples.map((example, i) => <ProblemExample input={example} key={example} id={i} state={props.states[i]} submitTest={props.submitTest}/>)}
+      {examples[props.challengeID].map((example, i) => <ProblemExample input={example} key={example} id={i} state={props.states[i]} submitTest={props.submitTest}/>)}
   </div>
 );
 

@@ -16,6 +16,8 @@ function App() {
     const [code, setCode] = useState("print('hello world!')");
     const [testStates, setTestStates] = useState<TestState[]>(["unknown", "unknown"]);
     const [theme, setTheme] = useState("dark");
+    const [challengeID, setChallengeID] = useState(0);
+    const [points, setPoints] = useState(10);
 
     const { sendMessage, lastMessage } = useWebSocket("ws://localhost:8080");
 
@@ -37,6 +39,7 @@ function App() {
             else if (message.type === MessageType.SubmitResponse) {
                 if (message.success) setOutput("Success!");
                 else setOutput("Failed!");
+                setChallengeID(prev => prev + 1);
             }
             else if (message.type === MessageType.ChallengeResponse) {
                 const result: TestState = message.success ? "success" : "fail";
@@ -82,7 +85,7 @@ function App() {
                         sendToServer({type: MessageType.Obstacle, obstacle: type });
                     }}
                     submit={() => {
-                        sendToServer({type: MessageType.Submit, challengeID: 1, code: code})
+                        sendToServer({type: MessageType.Submit, challengeID: challengeID, code: code})
                     }}
                     isHidden={isHidden}
                     cursive={cursive}
@@ -94,6 +97,8 @@ function App() {
                     submitTest={(id) => {
                         sendToServer({type: MessageType.Challenge, challengeID: 1, testID: id, code: code})
                     }}
+                    points={points}
+                    setPoints={setPoints}
                 /> :
                 <HomePage
                     createRoom={
