@@ -36,7 +36,7 @@ export class CodeRunner {
         const tests = this.challenges[message.challengeID].tests;
         for(const test of tests){
             code += '\n\n\n\n';
-            code += test;            
+            code += test;
         }
         let isProcessAlive = false;
         const prcs = exec(`python3 -c "${(code.replace('\\', '\\\\')).replace('\"', '\\"')}"`)
@@ -96,6 +96,7 @@ export class CodeRunner {
                 console.log('Killed process because it took too long');
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
+                    challengeID: message.challengeID,
                     output: stdout.replace(FAIL, ''),
                     success: false
                 }));
