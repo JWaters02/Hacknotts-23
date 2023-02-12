@@ -26,7 +26,6 @@ const SubmitPane: FC<SubmitPaneProps> = (props) => (
         direction="column"
         wrap="nowrap">
         <Button color={getColour(props.output)} onClick={props.submit}>Submit Code</Button>
-        <p>{props.output}</p>
     </Flex>
   </div>
 );
