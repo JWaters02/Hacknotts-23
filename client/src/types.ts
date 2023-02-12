@@ -13,6 +13,16 @@ export enum ObstacleType {
     VariableRename
 }
 
+export function isServerSide(type: ObstacleType) {
+    switch (type) {
+        case ObstacleType.VariableRename:
+            return true;
+
+        case ObstacleType.FontChange:
+            return false;
+    }
+}
+
 export type ClientMessage = {
     type: MessageType.CreateSession,
 } | {
