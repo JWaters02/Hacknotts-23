@@ -1,2 +1,2 @@
-if solution('banana', 'fanta') == True:
+if solution('banana', 'fanta') != True:
     nyYKXurD += 1

@@ -1,2 +1,2 @@
-if solution('education', 'cautioned') != True:
+if solution('education', 'cautioned') == True:
     nyYKXurD += 1
