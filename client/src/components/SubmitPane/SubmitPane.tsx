@@ -4,6 +4,7 @@ import { Button, Flex } from "@mantine/core";
 
 interface SubmitPaneProps {
     output: string
+    submit(): void
 }
 
 const SubmitPane: FC<SubmitPaneProps> = (props) => (
@@ -15,7 +16,7 @@ const SubmitPane: FC<SubmitPaneProps> = (props) => (
         align="center"
         direction="column"
         wrap="nowrap">
-        <Button>Submit Code</Button>
+        <Button onClick={props.submit}>Submit Code</Button>
         <p>{props.output}</p>
     </Flex>
   </div>

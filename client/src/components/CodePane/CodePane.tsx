@@ -12,6 +12,7 @@ interface CodePaneProps {
     setCode: (code: string) => void
     output: string
     isHidden: boolean
+    submit(): void
 }
 
 const CodePane: FC<CodePaneProps> = (props) => {
@@ -21,7 +22,7 @@ const CodePane: FC<CodePaneProps> = (props) => {
            highlight={code => highlight(code, languages.python, "python")}
            value={props.code}
        />
-        <SubmitPane output={props.output}></SubmitPane>
+        <SubmitPane submit={props.submit} output={props.output}></SubmitPane>
     </div>
 }
 

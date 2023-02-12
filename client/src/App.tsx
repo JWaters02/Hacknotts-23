@@ -13,8 +13,6 @@ function App() {
     const [sessionID, setSessionID] = useState<number | null>(null)
     const [output, setOutput] = useState("Output")
     const [isHidden, setIsHidden] = useState(false)
-    const [newCode, setNewCode] = useState<string | null>(null)
-    const [newFont, setNewFont] = useState()
     const [code, setCode] = useState("print('hello world!')");
 
     const { sendMessage, lastMessage } = useWebSocket("ws://localhost:8080");
@@ -61,6 +59,9 @@ function App() {
                 {isInGame ? <GamePage
                     sendObstacle={(type) => {
                         sendToServer({type: MessageType.Obstacle, obstacle: type });
+                    }}
+                    submit={() => {
+                        sendToServer({type: MessageType.Submit, challengeID: 0, code: code})
                     }}
                     isHidden={isHidden}
                     output={output}
