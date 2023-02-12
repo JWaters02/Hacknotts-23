@@ -70,14 +70,12 @@ export class CodeRunner {
                     output: stdout.replace(SUCCESS, ''),
                     success: true
                 }));
-                console.log('program works!');
             }else{
                 clientSocket.send(JSON.stringify({
                     type: MessageType.SubmitResponse,
                     output: stdout,
                     success: false
                 }));
-                console.log('program does not work :(');
             }
         });
     }
@@ -120,15 +118,21 @@ export class CodeRunner {
                     success: true,
                     output: stdout.replace(SUCCESS, '')
                 }));
-                console.log('program works!');
             }else{
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
                     output: stdout,
                     success: false
                 }));
-                console.log('program does not work :(');
             }
         });
     }
 }
+
+/* what its supposed to be
+{
+  type: 1,
+  code: 'def solution(a, b):\n    return a + b',
+  challengeID: 1
+}
+*/
