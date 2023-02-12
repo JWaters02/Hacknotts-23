@@ -1,3 +1,2 @@
-r = add(4, 2)
-if r != 6:
+if is_anagram('listen', 'silent') != True:
     print('cTABW0oLkyrgLjUagMK7nGvRt3JH724q')

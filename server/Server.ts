@@ -105,6 +105,11 @@ export class Server {
             return;
         }
         if (this.sessions.has(clientSocket)) {
+            clientSocket.send(JSON.stringify({
+                type: MessageType.Response,
+                success: false,
+                sessionID: json.sessionID
+            }));
             return;
         }
         const opponent = this.pendingSessions.get(json.sessionID);
@@ -120,6 +125,11 @@ export class Server {
         const instance = new SessionInstance(opponent, clientSocket);
         this.sessions.set(clientSocket, instance);
         this.sessions.set(opponent, instance);
+        clientSocket.send(JSON.stringify({
+            type: MessageType.Response,
+            success: true,
+            sessionID: json.sessionID
+        }));
     }
 
     private getOpponent(clientSocket: WebSocket): WebSocket | null {
