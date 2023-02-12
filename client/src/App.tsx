@@ -37,9 +37,16 @@ function App() {
                 }, 200);
             }
             else if (message.type === MessageType.SubmitResponse) {
-                if (message.success) setOutput("Success!");
-                else setOutput("Failed!");
-                setChallengeID(prev => prev + 1);
+                if (message.success) {
+                    setOutput("Success!");
+                    setChallengeID(prev => prev + 1);
+                    if (challengeID >= 5) {
+                        setOutput("You won!");
+                        sendToServer({type: MessageType.EndGame, won: true});
+                    }
+                } else {
+                    setOutput("Failed");
+                }
             }
             else if (message.type === MessageType.ChallengeResponse) {
                 const result: TestState = message.success ? "success" : "fail";
@@ -72,6 +79,9 @@ function App() {
             else if (message.type === MessageType.Response) {
                 setSessionID(message.sessionID)
                 setIsInGame(true);
+            } else if (message.type === MessageType.EndGame) {
+                const won = message.won;
+                setOutput(won ? "You won" : "You lost");
             }
         }
     }, [lastMessage, sendMessage]);
@@ -95,7 +105,7 @@ function App() {
                     setCode={setCode}
                     states={testStates}
                     submitTest={(id) => {
-                        sendToServer({type: MessageType.Challenge, challengeID: 1, testID: id, code: code})
+                        sendToServer({type: MessageType.Challenge, challengeID: currentPuzzle, testID: id, code: code})
                     }}
                     points={points}
                     setPoints={setPoints}

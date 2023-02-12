@@ -32,6 +32,7 @@ export class Server {
         this.events[MessageType.CreateSession] = this.createSession.bind(this);
         this.events[MessageType.JoinSession] = this.joinSession.bind(this);
         this.events[MessageType.HandleServerSideObstacle] = this.handleServerSideObstacle.bind(this);
+        this.events[MessageType.EndGame] = this.endGame.bind(this);
     }
 
     // This function is called once the client joins a session(game)
@@ -92,6 +93,15 @@ export class Server {
         }
         const newCode = handleServerSideObstacle(json.obstacle, json.code);
         clientSocket.send(JSON.stringify({type: MessageType.HandleServerSideObstacle, code: newCode}));
+    }
+
+    private endGame(clientSocket: WebSocket, json: ClientMessage) {
+        if (json.type !== MessageType.EndGame) {
+            return;
+        }
+        const opponent = this.getOpponent(clientSocket);
+        opponent.send(JSON.stringify({type: MessageType.EndGame, won: !json.won}));
+        clientSocket.close();
     }
 
     private createSession(clientSocket: WebSocket) {

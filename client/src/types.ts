@@ -8,6 +8,7 @@ export enum MessageType {
     Response = 6,
     ChallengeResponse = 7,
     SubmitResponse = 8,
+    EndGame = 9,
 }
 
 export enum ObstacleType {
@@ -58,6 +59,9 @@ export type ClientMessage = {
     type: MessageType.HandleServerSideObstacle,
     obstacle: ObstacleType,
     code: string
+} | {
+    type: MessageType.EndGame,
+    won: boolean,
 };
 
 export type ServerMessage = {
@@ -82,6 +86,9 @@ export type ServerMessage = {
 } | {
     type: MessageType.HandleServerSideObstacle,
     code: string
+} | {
+    type: MessageType.EndGame,
+    won: boolean,
 };
 
 export interface Challenge {
