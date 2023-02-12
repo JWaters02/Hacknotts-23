@@ -13,7 +13,7 @@ function App() {
     const [output, setOutput] = useState("Output")
     const [isHidden, setIsHidden] = useState(false)
     const [code, setCode] = useState("print('hello world!')");
-    const [testStates, setTestStates] = useState<TestState[]>(["unknown"]);
+    const [testStates, setTestStates] = useState<TestState[]>(["unknown", "unknown"]);
     const [theme, setTheme] = useState("dark");
 
     const { sendMessage, lastMessage } = useWebSocket("ws://localhost:8080");
@@ -38,7 +38,9 @@ function App() {
                 else setOutput("Failed!");
             }
             else if (message.type === MessageType.ChallengeResponse) {
-                setTestStates(prev => prev.map(test => "success"))
+                const result: TestState = message.success ? "success" : "fail";
+                console.log("test back")
+                setTestStates(prev => prev.map((state, i) => message.testID === i ? result : state));
             }
             else if (message.type === MessageType.Obstacle) {
                 if (isServerSide(message.obstacle)) {

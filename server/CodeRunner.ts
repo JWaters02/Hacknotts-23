@@ -115,12 +115,14 @@ export class CodeRunner {
             if(stdout.includes(SUCCESS)){
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
+                    testID: message.testID,
                     success: true,
                     output: stdout.replace(SUCCESS, '')
                 }));
             }else{
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
+                    testID: message.testID,
                     output: stdout,
                     success: false
                 }));

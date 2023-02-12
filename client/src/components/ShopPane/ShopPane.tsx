@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, {FC, useState} from 'react';
 import styles from './ShopPane.module.css';
 import {Grid, MantineProvider, Title} from "@mantine/core";
 import ObstacleList from "../ObstacleList/ObstacleList";
@@ -15,6 +15,6 @@ const ShopPane: FC<ShopPaneProps> = (props) => (
         <ObstacleList sendObstacle={props.sendObstacle}></ObstacleList>
         <p><strong>Total Points:</strong> {props.totalPoints}</p>
     </div>
-);
+}
 
 export default ShopPane;
