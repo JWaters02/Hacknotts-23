@@ -1,8 +1,8 @@
 .CodePane {
     height: 100vh;
-    justify-content: space-between;
-    flex-direction: column;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 10% 60% 30%;
 }
 
 .HiddenCodePane {
