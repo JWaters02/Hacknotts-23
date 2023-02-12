@@ -1,20 +1,29 @@
 import { exec } from 'child_process';
 import { Challenge, ClientMessage, MessageType, ServerMessage } from './types'
 import { WebSocket } from 'ws';
+import { readdirSync } from 'fs';
 
 export class CodeRunner {
     private challenges: Array<Challenge> = [];
 
     constructor() {
         // Load in all the exampes
+        const getDirectories = source =>
+            readdirSync(source, { withFileTypes: true })
+            .filter(dirent => dirent.isDirectory())
+            .map(dirent => dirent.name);
+        
+        getDirectories('challenges')
+        
         this.challenges.push({
             tests: [`
 r = add(2, 4)
 if(r == 6):
-    print('TRUE')
+    print("TRUE")
 else:
-    print('FALSE')
-            `]
+    print("FALSE")
+            `,
+]
         });
     }
 
@@ -24,7 +33,7 @@ else:
         code += '\n\n\n\n';
         code += this.challenges[message.challengeID].tests[message.testID];
         let isProcessAlive = false;
-        const prcs = exec(`python3 -c "${code}"`)
+        const prcs = exec(`python3 -c "${(code.replace('\\', '\\\\')).replace('\"', '\\"')}"`)
         prcs.on('spawn', () => {
             isProcessAlive = true;
         });

@@ -1,4 +1,3 @@
-
 import { readFileSync } from 'fs';
 import { WebSocket } from 'ws';
 import {MessageType, ObstacleType} from '../server/types';
