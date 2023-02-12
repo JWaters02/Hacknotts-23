@@ -42,7 +42,7 @@ export class CodeRunner {
         code += 'if nyYKXurD == 5:\n';
         code += `    print('${SUCCESS}')\n`;
         let isProcessAlive = false;
-        const prcs = exec(`python3 -c "${(code.replace('\\', '\\\\')).replace('\"', '\\"')}"`)
+        const prcs = exec(`python3 -c "${code}"`)
         prcs.on('spawn', () => {
             isProcessAlive = true;
         });
@@ -91,7 +91,7 @@ export class CodeRunner {
         code += 'if nyYKXurD == 1:\n';
         code += `    print('${SUCCESS}')\n`;
         let isProcessAlive = false;
-        const prcs = exec(`python3 -c "${(code.replace('\\', '\\\\')).replace('\"', '\\"')}"`)
+        const prcs = exec(`python3 -c "${code}"`)
         prcs.on('spawn', () => {
             isProcessAlive = true;
         });
