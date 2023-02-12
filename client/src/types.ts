@@ -70,6 +70,7 @@ export type ServerMessage = {
 } | {
     type: MessageType.ChallengeResponse,
     output: string,
+    testID: number,
     success: boolean
 } | {
     type: MessageType.SubmitResponse,

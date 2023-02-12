@@ -20,12 +20,12 @@ ws.onmessage = event => {
             ws2.onopen = event => {
                 ws2.send(JSON.stringify({type: MessageType.JoinSession, sessionID: id}));
                 console.log(`Joined with a second client`);
-                ws2.send(JSON.stringify({type: MessageType.HandleServerSideObstacle, obstacle: ObstacleType.VariableRename, code: pythonCode}))
+                // ws2.send(JSON.stringify({type: MessageType.HandleServerSideObstacle, obstacle: ObstacleType.VariableRename, code: pythonCode}))
 const code = `
 def add(a, b):
     return a + b
 `;
-                ws2.send(JSON.stringify({type: MessageType.Submit, code, challengeID: 0}));
+                ws2.send(JSON.stringify({type: MessageType.Challenge, code, challengeID: 1, testID: 0}));
             };
             break;
     }

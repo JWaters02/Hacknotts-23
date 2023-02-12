@@ -3,7 +3,7 @@ import { Challenge, ClientMessage, MessageType, ServerMessage } from './types'
 import { WebSocket } from 'ws';
 import { readdirSync, readFileSync } from 'fs';
 
-const FAIL = 'cTABW0oLkyrgLjUagMK7nGvRt3JH724q';
+const SUCCESS = 'cTABW0oLkyrgLjUagMK7nGvRt3JH724q';
 
 export class CodeRunner {
     private challenges: Array<Challenge> = [];
@@ -32,12 +32,15 @@ export class CodeRunner {
 
     public submit(clientSocket: WebSocket, message: ClientMessage) {
         if(message.type != MessageType.Submit) return;
-        let code = message.code;
+        let code = 'nyYKXurD=0\n' + message.code;
         const tests = this.challenges[message.challengeID].tests;
         for(const test of tests){
             code += '\n\n\n\n';
-            code += test;            
+            code += test;
         }
+        code += '\n\n\n\n';
+        code += 'if nyYKXurD == 5:\n';
+        code += `    print('${SUCCESS}')\n`;
         let isProcessAlive = false;
         const prcs = exec(`python3 -c "${(code.replace('\\', '\\\\')).replace('\"', '\\"')}"`)
         prcs.on('spawn', () => {
@@ -51,7 +54,7 @@ export class CodeRunner {
                 clientSocket.send(JSON.stringify({
                     type: MessageType.SubmitResponse,
                     success: false,
-                    output: stdout.replace(FAIL, '')
+                    output: stdout
                 }));
             }
         }, 5000);
@@ -61,17 +64,17 @@ export class CodeRunner {
         });
         prcs.on('exit', () => {
             isProcessAlive = false;
-            if(!stdout.includes(FAIL)){
+            if(stdout.includes(SUCCESS)){
                 clientSocket.send(JSON.stringify({
                     type: MessageType.SubmitResponse,
-                    output: stdout.replace(FAIL, ''),
+                    output: stdout.replace(SUCCESS, ''),
                     success: true
                 }));
                 console.log('program works!');
             }else{
                 clientSocket.send(JSON.stringify({
                     type: MessageType.SubmitResponse,
-                    output: stdout.replace(FAIL, ''),
+                    output: stdout,
                     success: false
                 }));
                 console.log('program does not work :(');
@@ -81,9 +84,12 @@ export class CodeRunner {
 
     public runTest(clientSocket: WebSocket, message: ClientMessage) {
         if(message.type != MessageType.Challenge) return;
-        let code = message.code;
+        let code = 'nyYKXurD=0\n' + message.code;
         code += '\n\n\n\n';
         code += this.challenges[message.challengeID].tests[message.testID];
+        code += '\n\n\n\n';
+        code += 'if nyYKXurD == 1:\n';
+        code += `    print('${SUCCESS}')\n`;
         let isProcessAlive = false;
         const prcs = exec(`python3 -c "${(code.replace('\\', '\\\\')).replace('\"', '\\"')}"`)
         prcs.on('spawn', () => {
@@ -96,7 +102,8 @@ export class CodeRunner {
                 console.log('Killed process because it took too long');
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
-                    output: stdout.replace(FAIL, ''),
+                    testID: message.testID,
+                    output: stdout,
                     success: false
                 }));
             }
@@ -107,17 +114,17 @@ export class CodeRunner {
         });
         prcs.on('exit', () => {
             isProcessAlive = false;
-            if(!stdout.includes(FAIL)){
+            if(stdout.includes(SUCCESS)){
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
                     success: true,
-                    output: stdout.replace(FAIL, '')
+                    output: stdout.replace(SUCCESS, '')
                 }));
                 console.log('program works!');
             }else{
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
-                    output: stdout.replace(FAIL, ''),
+                    output: stdout,
                     success: false
                 }));
                 console.log('program does not work :(');
