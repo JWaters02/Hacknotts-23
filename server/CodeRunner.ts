@@ -3,7 +3,7 @@ import { Challenge, ClientMessage, MessageType, ServerMessage } from './types'
 import { WebSocket } from 'ws';
 import { readdirSync, readFileSync } from 'fs';
 
-// cTABW0oLkyrgLjUagMK7nGvRt3JH724q Means fail
+const FAIL = 'cTABW0oLkyrgLjUagMK7nGvRt3JH724q';
 
 export class CodeRunner {
     private challenges: Array<Challenge> = [];
@@ -50,7 +50,8 @@ export class CodeRunner {
                 console.log('Killed process because it took too long');
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
-                    success: false
+                    success: false,
+                    output: stdout.replace(FAIL, '')
                 }));
             }
         }, 5000);
@@ -60,15 +61,17 @@ export class CodeRunner {
         });
         prcs.on('exit', () => {
             isProcessAlive = false;
-            if(!stdout.includes('cTABW0oLkyrgLjUagMK7nGvRt3JH724q')){
+            if(!stdout.includes(FAIL)){
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
+                    output: stdout.replace(FAIL, ''),
                     success: true
                 }));
                 console.log('program works!');
             }else{
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
+                    output: stdout.replace(FAIL, ''),
                     success: false
                 }));
                 console.log('program does not work :(');
@@ -93,6 +96,7 @@ export class CodeRunner {
                 console.log('Killed process because it took too long');
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
+                    output: stdout.replace(FAIL, ''),
                     success: false
                 }));
             }
@@ -103,15 +107,17 @@ export class CodeRunner {
         });
         prcs.on('exit', () => {
             isProcessAlive = false;
-            if(!stdout.includes('cTABW0oLkyrgLjUagMK7nGvRt3JH724q')){
+            if(!stdout.includes(FAIL)){
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
-                    success: true
+                    success: true,
+                    output: stdout.replace(FAIL, '')
                 }));
                 console.log('program works!');
             }else{
                 clientSocket.send(JSON.stringify({
                     type: MessageType.ChallengeResponse,
+                    output: stdout.replace(FAIL, ''),
                     success: false
                 }));
                 console.log('program does not work :(');

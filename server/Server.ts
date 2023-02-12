@@ -110,7 +110,7 @@ export class Server {
         const opponent = this.pendingSessions.get(json.sessionID);
         if (opponent === undefined) {
             clientSocket.send(JSON.stringify({
-                type: MessageType.ChallengeResponse,
+                type: MessageType.Response,
                 success: false
             }));
             return;
