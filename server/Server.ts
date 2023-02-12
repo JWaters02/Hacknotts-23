@@ -32,6 +32,9 @@ export class Server {
         this.events[MessageType.CreateSession] = this.createSession.bind(this);
         this.events[MessageType.JoinSession] = this.joinSession.bind(this);
         this.events[MessageType.HandleServerSideObstacle] = this.handleServerSideObstacle.bind(this);
+        this.events[MessageType.Response] = null;
+        this.events[MessageType.ChallengeResponse] = null;
+        this.events[MessageType.SubmitResponse] = null;
         this.events[MessageType.EndGame] = this.endGame.bind(this);
     }
 
