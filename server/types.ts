@@ -30,7 +30,7 @@ export type ClientMessage = {
     challengeID: number,
 } | {
     type: MessageType.Obstacle,
-    code: ObstacleType
+    obstacle: ObstacleType
 } | {
     type: MessageType.HandleServerSideObstacle,
     obstacle: ObstacleType,
