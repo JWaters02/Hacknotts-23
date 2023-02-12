@@ -32,7 +32,7 @@ function App() {
                     setIsInGame(true);
                 }, 200);
             }
-            else if (message.type === MessageType.ChallengeResponse) {
+            else if (message.type === MessageType.SubmitResponse) {
                 if (message.success) setOutput("Success!");
                 else setOutput("Failed!");
             }
