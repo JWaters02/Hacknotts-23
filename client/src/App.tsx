@@ -73,7 +73,8 @@ function App() {
                         sendToServer({type: MessageType.Obstacle, obstacle: type });
                     }}
                     submit={() => {
-                        sendToServer({type: MessageType.Submit, challengeID: 0, code: code})
+                        // sendToServer({type: MessageType.Submit, challengeID: 0, code: code})
+                        sendToServer({type: MessageType.Challenge, challengeID: 1, testID: 0, code: code})
                     }}
                     isHidden={isHidden}
                     output={output}

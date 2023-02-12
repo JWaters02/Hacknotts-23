@@ -14,7 +14,7 @@ interface ObstacleButtonProps {
 const ObstacleButton: FC<ObstacleButtonProps> = (props) => {
     const [enabled, setBtnEnabled] = useState(true);
 
-    return <div className={styles.HomePage}>
+    return <div className={styles.ObstacleButton}>
         <Button disabled={!enabled} onClick={() => {
             props.sendObstacle(props.type);
             setBtnEnabled(false)
