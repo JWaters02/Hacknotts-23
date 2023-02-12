@@ -1,2 +1,2 @@
-if add(2, 2) == 4:
+if solution(2, 2) == 4:
     nyYKXurD += 1

@@ -1,2 +1,2 @@
-if add(4, 5) == 9:
+if solution(4, 5) == 9:
     nyYKXurD += 1
