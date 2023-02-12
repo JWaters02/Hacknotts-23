@@ -40,9 +40,9 @@ function App() {
                 if (message.success) {
                     setOutput("unknown");
                     setChallengeID(prev => prev + 1);
-                    if (challengeID >= 1) {
+                    if (challengeID >= 4) {
                         alert("You won!");
-                        sendToServer({type: MessageType.EndGame, won: true});
+                        // sendToServer({type: MessageType.EndGame, won: true});
                     }
                 } else {
                     setOutput("fail");
