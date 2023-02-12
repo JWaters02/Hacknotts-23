@@ -1,2 +1,2 @@
-if is_anagram('education', 'auctioned') != True:
+if solution('education', 'auctioned') != True:
     nyYKXurD += 1

@@ -17,7 +17,7 @@ Write a program to check if two strings are anagrams of each other.
 
 *Template code:*
 ```python
-def is_anagram(s1, s2):
+def solution(s1, s2):
     # Your code here
     return False
 ```
@@ -35,7 +35,7 @@ Write a program to check if a string is a palindrome.
 
 *Template code:*
 ```python
-def is_palindrome(input):
+def solution(input):
     # Your code here
     return False
 ```
@@ -59,7 +59,7 @@ There are only 5 notes in the UK: £5, £10, £20, £50, £100.
 
 *Template code:*
 ```python
-def minimum_change(cost, note):
+def solution(cost, note):
     # Your code here
     return 0
 ```
@@ -85,7 +85,7 @@ If there are multiple characters with the same number of repeats, return the fir
 
 *Template code:*
 ```python
-def most_repeated(input):
+def solution(input):
     # Your code here
     return ""
 ```
@@ -108,7 +108,7 @@ An input string is valid if:
 
 *Template code:*
 ```python
-def brackets_valid(input):
+def solution(input):
     # Your code here
     return False
 ```
@@ -130,7 +130,7 @@ The input array will always have an even number of elements.
 ```python
 from itertools import permutations
 
-def count_permutations(input):
+def solution(input):
     # Your code here
     return 0
 ```

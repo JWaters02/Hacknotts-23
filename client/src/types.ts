@@ -87,3 +87,5 @@ export type ServerMessage = {
 export interface Challenge {
     tests: Array<string>
 };
+
+export const MAGIC_FUNCTION_NAME = "solution";

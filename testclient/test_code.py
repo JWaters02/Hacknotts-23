@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from foo import bar
 import datetime
 import json
 import pathlib

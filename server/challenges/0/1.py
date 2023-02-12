@@ -1,2 +1,2 @@
-if is_anagram('banana', 'fanta') == True:
+if solution('banana', 'fanta') == True:
     nyYKXurD += 1
