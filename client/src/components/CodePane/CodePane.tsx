@@ -6,11 +6,12 @@ import SubmitPane from "../SubmitPane/SubmitPane";
 import {highlight, languages} from "prismjs";
 import "prismjs/components/prism-python";
 import "prismjs/themes/prism-tomorrow.css";
+import {TestState} from "../ProblemExamples/ProblemExamples";
 
 interface CodePaneProps {
     code: string
     setCode: (code: string) => void
-    output: string
+    output: TestState
     isHidden: boolean
     cursive: boolean
     submit(): void

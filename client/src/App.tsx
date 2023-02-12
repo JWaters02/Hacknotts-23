@@ -10,7 +10,7 @@ import {TestState} from "./components/ProblemExamples/ProblemExamples";
 function App() {
     const [isInGame, setIsInGame] = useState(false);
     const [sessionID, setSessionID] = useState<number | null>(null)
-    const [output, setOutput] = useState("Output")
+    const [output, setOutput] = useState<TestState>("unknown")
     const [isHidden, setIsHidden] = useState(false)
     const [cursive, setCursive] = useState(false)
     const [code, setCode] = useState("print('hello world!')");
@@ -38,19 +38,18 @@ function App() {
             }
             else if (message.type === MessageType.SubmitResponse) {
                 if (message.success) {
-                    setOutput("Success!");
+                    setOutput("unknown");
                     setChallengeID(prev => prev + 1);
                     if (challengeID >= 5) {
-                        setOutput("You won!");
+                        alert("You won!");
                         sendToServer({type: MessageType.EndGame, won: true});
                     }
                 } else {
-                    setOutput("Failed");
+                    setOutput("fail");
                 }
             }
             else if (message.type === MessageType.ChallengeResponse) {
                 const result: TestState = message.success ? "success" : "fail";
-                console.log("test back")
                 setTestStates(prev => prev.map((state, i) => message.testID === i ? result : state));
             }
             else if (message.type === MessageType.Obstacle) {
@@ -81,7 +80,7 @@ function App() {
                 setIsInGame(true);
             } else if (message.type === MessageType.EndGame) {
                 const won = message.won;
-                setOutput(won ? "You won" : "You lost");
+                alert(won ? "You won" : "You lost");
             }
         }
     }, [lastMessage, sendMessage]);
@@ -105,7 +104,7 @@ function App() {
                     setCode={setCode}
                     states={testStates}
                     submitTest={(id) => {
-                        sendToServer({type: MessageType.Challenge, challengeID: currentPuzzle, testID: id, code: code})
+                        sendToServer({type: MessageType.Challenge, challengeID: challengeID, testID: id, code: code})
                     }}
                     points={points}
                     setPoints={setPoints}

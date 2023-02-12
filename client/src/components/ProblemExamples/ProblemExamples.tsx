@@ -8,7 +8,8 @@ const examples = [
     ["'listen', 'silent'", "'banana', 'fanta'"],
     ["4, 5", "1, 1"],
     ["'hello'", "'hola'"],
-    ["5.83, 10", "7.25, 10"]
+    ["5.83, 10", "7.25, 10"],
+    ["hello world", "hacker"]
 ]
 
 interface ProblemExampleProps {
@@ -18,14 +19,15 @@ interface ProblemExampleProps {
     id: number
 }
 
-const ProblemExample: FC<ProblemExampleProps> = (props) => {
-    function getColour(state: TestState) {
-        switch (state) {
-            case "unknown": return "blue"
-            case "success": return "green"
-            case "fail": return "red"
-        }
+export function getColour(state: TestState) {
+    switch (state) {
+        case "unknown": return "blue"
+        case "success": return "green"
+        case "fail": return "red"
     }
+}
+
+const ProblemExample: FC<ProblemExampleProps> = (props) => {
 
     return <div className={styles.ProblemExample}>
         <p>{props.input}</p>

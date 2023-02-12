@@ -9,7 +9,7 @@ import {TestState} from "../ProblemExamples/ProblemExamples";
 
 interface GamePageProps {
     sessionID: number
-    output: string
+    output: TestState
     sendObstacle(type: ObstacleType): void
     isHidden: boolean
     cursive: boolean
