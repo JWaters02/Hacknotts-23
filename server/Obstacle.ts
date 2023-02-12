@@ -107,8 +107,6 @@ export function changeConstants(code: string): string {
         code = code.slice(0, constantsToChange[i].from) + newImage + code.slice(constantsToChange[i].to);
     }
 
-    console.log(code);
-
     return code;
 }
 
