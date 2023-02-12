@@ -12,7 +12,10 @@ export enum MessageType {
 
 export enum ObstacleType {
     FontChange,
-    VariableRename
+    VariableRename,
+    ThemeChange,
+    ConstantsChange,
+    InterpreterChange,
 }
 
 export function isServerSide(type: ObstacleType) {
@@ -22,6 +25,15 @@ export function isServerSide(type: ObstacleType) {
 
         case ObstacleType.FontChange:
             return false;
+
+        case ObstacleType.ThemeChange:
+            return false;
+
+        case ObstacleType.ConstantsChange:
+            return true;
+
+        case ObstacleType.InterpreterChange:
+            return true;
     }
 }
 
