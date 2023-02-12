@@ -5,7 +5,7 @@ import GamePage from "./components/GamePage/GamePage";
 import HomePage from "./components/HomePage/HomePage";
 import {MantineProvider} from "@mantine/core";
 import useWebSocket from "react-use-websocket";
-import {isServerSide, MessageType, ObstacleType, ServerMessage} from "./types";
+import {isServerSide, MessageType, ServerMessage} from "./types";
 
 function App() {
     const [isInGame, setIsInGame] = useState(false);
@@ -33,11 +33,14 @@ function App() {
                 else setOutput("Failed!");
             }
             else if (message.type === MessageType.Obstacle) {
-                setIsHidden(true)
                 if (isServerSide(message.obstacle)) {
+                    setIsHidden(true);
                     sendMessage(JSON.stringify({type: MessageType.HandleServerSideObstacle, code: code}))
                 }
-                setIsHidden(false)
+            }
+            else if (message.type === MessageType.HandleServerSideObstacle) {
+                setCode(message.code);
+                setIsHidden(false);
             }
         }
     }, [lastMessage]);
