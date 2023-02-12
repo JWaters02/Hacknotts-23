@@ -1,5 +1,3 @@
-import {TestState} from "./components/ProblemExamples/ProblemExamples";
-
 export enum MessageType {
     Obstacle = 0,
     Submit = 1,
