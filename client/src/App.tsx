@@ -34,7 +34,7 @@ function App() {
             }
             else if (message.type === MessageType.Obstacle) {
                 setIsHidden(true)
-                switch (message.code) {
+                switch (message.obstacle) {
                     case ObstacleType.VariableRename:
 
                         break;
@@ -51,7 +51,7 @@ function App() {
         <div className="App">
             <MantineProvider theme={{ colorScheme: themeContext as any}} withGlobalStyles withNormalizeCSS>
                 {isInGame ? <GamePage sendObstacle={(type) => {
-                    sendMessage(JSON.stringify({type: MessageType.Obstacle, code: type }))
+                    sendMessage(JSON.stringify({type: MessageType.Obstacle, obstacle: type }))
                 }} isHidden={isHidden} output={output} sessionID={sessionID ? sessionID : -1}/> : <HomePage createRoom={() => {
                     sendMessage(JSON.stringify({type: MessageType.CreateSession}));
                 }}/>}

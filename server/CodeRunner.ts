@@ -49,7 +49,7 @@ export class CodeRunner {
                 prcs.kill('SIGINT');
                 console.log('Killed process because it took too long');
                 clientSocket.send(JSON.stringify({
-                    type: MessageType.Response,
+                    type: MessageType.ChallengeResponse,
                     success: false
                 }));
             }
@@ -62,13 +62,13 @@ export class CodeRunner {
             isProcessAlive = false;
             if(!stdout.includes('cTABW0oLkyrgLjUagMK7nGvRt3JH724q')){
                 clientSocket.send(JSON.stringify({
-                    type: MessageType.Response,
+                    type: MessageType.ChallengeResponse,
                     success: true
                 }));
                 console.log('program works!');
             }else{
                 clientSocket.send(JSON.stringify({
-                    type: MessageType.Response,
+                    type: MessageType.ChallengeResponse,
                     success: false
                 }));
                 console.log('program does not work :(');
@@ -92,7 +92,7 @@ export class CodeRunner {
                 prcs.kill('SIGINT');
                 console.log('Killed process because it took too long');
                 clientSocket.send(JSON.stringify({
-                    type: MessageType.Response,
+                    type: MessageType.ChallengeResponse,
                     success: false
                 }));
             }
@@ -105,13 +105,13 @@ export class CodeRunner {
             isProcessAlive = false;
             if(!stdout.includes('cTABW0oLkyrgLjUagMK7nGvRt3JH724q')){
                 clientSocket.send(JSON.stringify({
-                    type: MessageType.Response,
+                    type: MessageType.ChallengeResponse,
                     success: true
                 }));
                 console.log('program works!');
             }else{
                 clientSocket.send(JSON.stringify({
-                    type: MessageType.Response,
+                    type: MessageType.ChallengeResponse,
                     success: false
                 }));
                 console.log('program does not work :(');
