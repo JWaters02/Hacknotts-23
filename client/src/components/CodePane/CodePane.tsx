@@ -12,6 +12,7 @@ interface CodePaneProps {
     setCode: (code: string) => void
     output: string
     isHidden: boolean
+    cursive: boolean
     submit(): void
 }
 
@@ -22,6 +23,10 @@ const CodePane: FC<CodePaneProps> = (props) => {
            onValueChange={props.setCode}
            highlight={code => highlight(code, languages.python, "python")}
            value={props.code}
+           style={{
+               fontFamily: props.cursive ? '"Comic Sans MS", "Comic Sans", cursive' : '"Fira Code", "Fira Mono", monospace',
+               fontSize: 12
+            }}
        />
         <SubmitPane submit={props.submit} output={props.output}></SubmitPane>
     </div>

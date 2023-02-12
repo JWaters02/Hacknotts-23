@@ -12,6 +12,7 @@ interface GamePageProps {
     output: string
     sendObstacle(type: ObstacleType): void
     isHidden: boolean
+    cursive: boolean
     code: string
     setCode(s: string): void
     submit(): void
@@ -24,7 +25,7 @@ const GamePage: FC<GamePageProps> = (props) => {
     return <div className={styles.GamePage}>
         <Grid>
             <Grid.Col span={4}><p>{props.sessionID}</p><ProblemPane submitTest={props.submitTest} states={props.states} description={"write some code"} examples={["does it compile","does it work"]}/></Grid.Col>
-            <Grid.Col span={4}><CodePane submit={props.submit} isHidden={props.isHidden} output={props.output} code={props.code} setCode={(code) => {
+            <Grid.Col span={4}><CodePane submit={props.submit} isHidden={props.isHidden} output={props.output} cursive={props.cursive} code={props.code} setCode={(code) => {
                 // send to backend here
 
                 // update internal state
