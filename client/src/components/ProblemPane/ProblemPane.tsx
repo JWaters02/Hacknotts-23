@@ -5,11 +5,6 @@ import ProblemExamples, {TestState} from "../ProblemExamples/ProblemExamples";
 import {Grid, Title} from "@mantine/core";
 
 interface ProblemPaneProps {
-    description: string,
-    examples: string[]
-}
-
-interface ProblemPaneProps {
     states: TestState[]
     submitTest(id: number): void
     challengeID: number

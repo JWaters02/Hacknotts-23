@@ -19,7 +19,7 @@ function App() {
     const [challengeID, setChallengeID] = useState(0);
     const [points, setPoints] = useState(10);
 
-    const { sendMessage, lastMessage } = useWebSocket("ws://localhost:8080");
+    const { sendMessage, lastMessage } = useWebSocket("ws://209.97.183.115:8080");
 
     function sendToServer(message: ClientMessage) {
         console.log(message);
@@ -80,13 +80,13 @@ function App() {
         <div className="App">
             <MantineProvider theme={{ colorScheme: theme as any}} withGlobalStyles withNormalizeCSS>
                 {isInGame ? <GamePage
-                    totalPoints={10}
                     sendObstacle={(type) => {
                         sendToServer({type: MessageType.Obstacle, obstacle: type });
                     }}
                     submit={() => {
                         sendToServer({type: MessageType.Submit, challengeID: challengeID, code: code})
                     }}
+                    challengeID={challengeID}
                     isHidden={isHidden}
                     cursive={cursive}
                     output={output}

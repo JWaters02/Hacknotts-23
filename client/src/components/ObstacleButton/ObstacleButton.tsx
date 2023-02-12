@@ -8,7 +8,9 @@ interface ObstacleButtonProps {
     pointCost: number
     type: ObstacleType
     sendObstacle(type: ObstacleType): void
+    sendPointDeduction(type: number): void
     timeout: number
+    totalPoints: number
 }
 
 const ObstacleButton: FC<ObstacleButtonProps> = (props) => {
@@ -16,11 +18,16 @@ const ObstacleButton: FC<ObstacleButtonProps> = (props) => {
 
     return <div className={styles.ObstacleButton}>
         <Button disabled={!enabled} onClick={() => {
-            props.sendObstacle(props.type);
-            setBtnEnabled(false)
-            setTimeout(() => {
-                setBtnEnabled(true)
-            }, props.timeout)
+            if ((props.totalPoints - props.pointCost) >= 0) {
+                props.sendPointDeduction(props.pointCost)
+                props.sendObstacle(props.type);
+                setBtnEnabled(false)
+                setTimeout(() => {
+                    setBtnEnabled(true)
+                }, props.timeout)
+            } else {
+
+            }
         }}>
             {props.text}
         </Button>
