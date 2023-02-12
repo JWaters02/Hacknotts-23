@@ -1,2 +1,2 @@
-if add('education', 'cautioned') != True:
-    print('cTABW0oLkyrgLjUagMK7nGvRt3JH724q')
+if is_anagram('education', 'cautioned') != True:
+    nyYKXurD += 1
