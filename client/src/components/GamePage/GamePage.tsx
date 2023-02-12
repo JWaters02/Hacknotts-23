@@ -4,6 +4,7 @@ import {Grid} from "@mantine/core";
 import ProblemPane from "../ProblemPane/ProblemPane";
 import CodePane from "../CodePane/CodePane";
 import ShopPane from "../ShopPane/ShopPane";
+import {ObstacleType} from "../../types";
 
 interface GamePageProps {
     sessionID: number
@@ -20,7 +21,7 @@ const GamePage: FC<GamePageProps> = (props) => {
                 // update internal state
                 setCode(code);
             }}/></Grid.Col>
-            <Grid.Col span={3}><ShopPane/></Grid.Col>
+            <Grid.Col span={3}><ShopPane sendObstacle={props.sendObstacle}/></Grid.Col>
         </Grid>
     </div>
 }
