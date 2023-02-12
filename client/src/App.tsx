@@ -12,6 +12,7 @@ function App() {
     const [sessionID, setSessionID] = useState<number | null>(null)
     const [output, setOutput] = useState("Output")
     const [isHidden, setIsHidden] = useState(false)
+    const [cursive, setCursive] = useState(false)
     const [code, setCode] = useState("print('hello world!')");
     const [testStates, setTestStates] = useState<TestState[]>(["unknown"]);
     const [theme, setTheme] = useState("dark");
@@ -51,6 +52,11 @@ function App() {
                         setTimeout(() => {
                             setTheme("dark")
                         }, 15000);
+                    } else if (message.obstacle == ObstacleType.FontChange) {
+                        setCursive(true);
+                        setTimeout(() => {
+                            setCursive(false);
+                        }, 60000);
                     }
                 }
             }
@@ -77,6 +83,7 @@ function App() {
                         sendToServer({type: MessageType.Submit, challengeID: 1, code: code})
                     }}
                     isHidden={isHidden}
+                    cursive={cursive}
                     output={output}
                     sessionID={sessionID ? sessionID : -1}
                     code={code}
