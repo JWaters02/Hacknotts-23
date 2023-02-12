@@ -27,7 +27,7 @@ export class Server {
         });
         this.socket.on('connection', this.onClientConnect.bind(this));
         this.events[MessageType.Obstacle] = this.sendObstacle.bind(this);
-        this.events[MessageType.Submit] = this.submit.bind(this);
+        this.events[MessageType.Submit] = this.runner.submit.bind(this.runner);
         this.events[MessageType.Challenge] = this.runner.runTest.bind(this.runner);
         this.events[MessageType.CreateSession] = this.createSession.bind(this);
         this.events[MessageType.JoinSession] = this.joinSession.bind(this);
@@ -92,10 +92,6 @@ export class Server {
         }
         const newCode = handleServerSideObstacle(json.obstacle, json.code);
         clientSocket.send(JSON.stringify({type: MessageType.HandleServerSideObstacle, code: newCode}));
-    }
-
-    private submit(clientSocket: WebSocket, message: ClientMessage) {
-        
     }
 
     private createSession(clientSocket: WebSocket) {

@@ -3,6 +3,8 @@ import { Challenge, ClientMessage, MessageType, ServerMessage } from './types'
 import { WebSocket } from 'ws';
 import { readdirSync, readFileSync } from 'fs';
 
+// cTABW0oLkyrgLjUagMK7nGvRt3JH724q Means fail
+
 export class CodeRunner {
     private challenges: Array<Challenge> = [];
 
@@ -28,6 +30,52 @@ export class CodeRunner {
         }
     }
 
+    public submit(clientSocket: WebSocket, message: ClientMessage) {
+        if(message.type != MessageType.Submit) return;
+        let code = message.code;
+        const tests = this.challenges[message.challengeID].tests;
+        for(const test of tests){
+            code += '\n\n\n\n';
+            code += test;            
+        }
+        let isProcessAlive = false;
+        const prcs = exec(`python3 -c "${(code.replace('\\', '\\\\')).replace('\"', '\\"')}"`)
+        prcs.on('spawn', () => {
+            isProcessAlive = true;
+        });
+        setTimeout(() => {
+            if(isProcessAlive){
+                isProcessAlive = false;
+                prcs.kill('SIGINT');
+                console.log('Killed process because it took too long');
+                clientSocket.send(JSON.stringify({
+                    type: MessageType.Response,
+                    success: false
+                }));
+            }
+        }, 5000);
+        let stdout = '';
+        prcs.stdout.on('data', msg => {
+            stdout = msg;
+        });
+        prcs.on('exit', () => {
+            isProcessAlive = false;
+            if(!stdout.includes('cTABW0oLkyrgLjUagMK7nGvRt3JH724q')){
+                clientSocket.send(JSON.stringify({
+                    type: MessageType.Response,
+                    success: true
+                }));
+                console.log('program works!');
+            }else{
+                clientSocket.send(JSON.stringify({
+                    type: MessageType.Response,
+                    success: false
+                }));
+                console.log('program does not work :(');
+            }
+        });
+    }
+
     public runTest(clientSocket: WebSocket, message: ClientMessage) {
         if(message.type != MessageType.Challenge) return;
         let code = message.code;
@@ -49,13 +97,13 @@ export class CodeRunner {
                 }));
             }
         }, 5000);
-        const outputs: Array<string> = [];
+        let stdout = '';
         prcs.stdout.on('data', msg => {
-            outputs.push(msg);
+            stdout = msg;
         });
         prcs.on('exit', () => {
             isProcessAlive = false;
-            if(outputs[outputs.length-1] == 'True\n'){
+            if(!stdout.includes('cTABW0oLkyrgLjUagMK7nGvRt3JH724q')){
                 clientSocket.send(JSON.stringify({
                     type: MessageType.Response,
                     success: true

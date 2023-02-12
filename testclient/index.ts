@@ -25,7 +25,7 @@ const code = `
 def add(a, b):
     return a + b
 `;
-                ws2.send(JSON.stringify({type: MessageType.Challenge, code, challengeID: 0, testID: 0}));
+                ws2.send(JSON.stringify({type: MessageType.Submit, code, challengeID: 0}));
             };
             break;
     }
