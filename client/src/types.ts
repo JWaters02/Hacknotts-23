@@ -52,7 +52,8 @@ export type ServerMessage = {
     sessionID: number
 } | {
     type: MessageType.Response,
-    success: boolean
+    success: boolean,
+    sessionID: number
 } | {
     type: MessageType.ChallengeResponse,
     output: string,

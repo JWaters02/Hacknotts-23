@@ -111,7 +111,8 @@ export class Server {
         if (opponent === undefined) {
             clientSocket.send(JSON.stringify({
                 type: MessageType.Response,
-                success: false
+                success: false,
+                sessionID: json.sessionID
             }));
             return;
         }
