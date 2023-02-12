@@ -29,7 +29,7 @@ export type ClientMessage = {
     challengeID: number,
 } | {
     type: MessageType.Obstacle,
-    code: ObstacleType
+    obstacle: ObstacleType
 } | {
     type: MessageType.HandleServerSideObstacle,
     obstacle: ObstacleType,
@@ -44,7 +44,7 @@ export type ServerMessage = {
     success: boolean
 } | {
     type: MessageType.Obstacle,
-    code: ObstacleType
+    obstacle: ObstacleType
 } | {
     type: MessageType.HandleServerSideObstacle,
     code: string
@@ -52,4 +52,4 @@ export type ServerMessage = {
 
 export interface Challenge {
     tests: Array<string>
-}
+};
