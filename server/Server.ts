@@ -74,6 +74,9 @@ export class Server {
     */
     private onClientMessage(clientSocket: WebSocket, message: string) {
         const json: ClientMessage = JSON.parse(message);
+        if (json.type === MessageType.EndGame) {
+            this.endGame(clientSocket, json);
+        }
         this.events[json.type](clientSocket, json);
     }
 
