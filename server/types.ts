@@ -45,7 +45,7 @@ export type ServerMessage = {
     success: boolean
 } | {
     type: MessageType.Obstacle,
-    code: ObstacleType
+    obstacle: ObstacleType
 } | {
     type: MessageType.HandleServerSideObstacle,
     code: string

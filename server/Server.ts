@@ -79,7 +79,7 @@ export class Server {
         }
         const opponent = this.getOpponent(clientSocket);
         if (opponent !== null) {
-            opponent.send(JSON.stringify({type: MessageType.Obstacle, code: json.code}));
+            opponent.send(JSON.stringify({type: MessageType.Obstacle, obstacle: json.obstacle}));
         }
     }
 
@@ -95,7 +95,7 @@ export class Server {
     }
 
     private submit(clientSocket: WebSocket, message: ClientMessage) {
-
+        
     }
 
     private createSession(clientSocket: WebSocket) {

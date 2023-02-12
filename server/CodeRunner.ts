@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 import { Challenge, ClientMessage, MessageType, ServerMessage } from './types'
 import { WebSocket } from 'ws';
-import { readdirSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs';
 
 export class CodeRunner {
     private challenges: Array<Challenge> = [];
@@ -12,19 +12,20 @@ export class CodeRunner {
             readdirSync(source, { withFileTypes: true })
             .filter(dirent => dirent.isDirectory())
             .map(dirent => dirent.name);
-        
-        getDirectories('challenges')
-        
-        this.challenges.push({
-            tests: [`
-r = add(2, 4)
-if(r == 6):
-    print("TRUE")
-else:
-    print("FALSE")
-            `,
-]
-        });
+
+        const dirs = getDirectories('challenges');
+        for(const d of dirs){
+            const files = readdirSync('./challenges/' + d, {withFileTypes: true});
+            this.challenges.push({
+                tests:[]
+            });
+            for(const f of files){
+                const pathToFile = './challenges/' + d + '/' + f.name;
+                const file = readFileSync(pathToFile,{encoding:'utf8', flag:'r'});
+                const lastChalIdx = this.challenges.length-1;
+                this.challenges[lastChalIdx].tests.push(file);
+            }
+        }
     }
 
     public runTest(clientSocket: WebSocket, message: ClientMessage) {
@@ -54,7 +55,7 @@ else:
         });
         prcs.on('exit', () => {
             isProcessAlive = false;
-            if(outputs[outputs.length-1] == 'TRUE\n'){
+            if(outputs[outputs.length-1] == 'True\n'){
                 clientSocket.send(JSON.stringify({
                     type: MessageType.Response,
                     success: true
