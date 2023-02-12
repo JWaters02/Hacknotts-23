@@ -49,7 +49,7 @@ export class CodeRunner {
                 prcs.kill('SIGINT');
                 console.log('Killed process because it took too long');
                 clientSocket.send(JSON.stringify({
-                    type: MessageType.ChallengeResponse,
+                    type: MessageType.SubmitResponse,
                     success: false,
                     output: stdout.replace(FAIL, '')
                 }));
@@ -63,14 +63,14 @@ export class CodeRunner {
             isProcessAlive = false;
             if(!stdout.includes(FAIL)){
                 clientSocket.send(JSON.stringify({
-                    type: MessageType.ChallengeResponse,
+                    type: MessageType.SubmitResponse,
                     output: stdout.replace(FAIL, ''),
                     success: true
                 }));
                 console.log('program works!');
             }else{
                 clientSocket.send(JSON.stringify({
-                    type: MessageType.ChallengeResponse,
+                    type: MessageType.SubmitResponse,
                     output: stdout.replace(FAIL, ''),
                     success: false
                 }));
