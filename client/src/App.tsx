@@ -1,19 +1,20 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
-import {MyThemeContext} from "./index";
 import GamePage from "./components/GamePage/GamePage";
 import HomePage from "./components/HomePage/HomePage";
 import {MantineProvider} from "@mantine/core";
 import useWebSocket from "react-use-websocket";
-import {ClientMessage, isServerSide, MessageType, ServerMessage} from "./types";
+import {ClientMessage, isServerSide, MessageType, ObstacleType, ServerMessage} from "./types";
+import {TestState} from "./components/ProblemExamples/ProblemExamples";
 
 function App() {
     const [isInGame, setIsInGame] = useState(false);
-    const themeContext = useContext(MyThemeContext);
     const [sessionID, setSessionID] = useState<number | null>(null)
     const [output, setOutput] = useState("Output")
     const [isHidden, setIsHidden] = useState(false)
     const [code, setCode] = useState("print('hello world!')");
+    const [testStates, setTestStates] = useState<TestState[]>(["unknown"]);
+    const [theme, setTheme] = useState("dark");
 
     const { sendMessage, lastMessage } = useWebSocket("ws://localhost:8080");
 
@@ -36,10 +37,21 @@ function App() {
                 if (message.success) setOutput("Success!");
                 else setOutput("Failed!");
             }
+            else if (message.type === MessageType.ChallengeResponse) {
+                setTestStates(prev => prev.map(test => "success"))
+            }
             else if (message.type === MessageType.Obstacle) {
                 if (isServerSide(message.obstacle)) {
                     setIsHidden(true);
                     sendToServer({type: MessageType.HandleServerSideObstacle, obstacle: message.obstacle, code: code});
+                } else {
+                    // do some client effects
+                    if (message.obstacle === ObstacleType.ThemeChange) {
+                        setTheme("light")
+                        setTimeout(() => {
+                            setTheme("dark")
+                        }, 15000);
+                    }
                 }
             }
             else if (message.type === MessageType.HandleServerSideObstacle) {
@@ -55,7 +67,7 @@ function App() {
 
     return (
         <div className="App">
-            <MantineProvider theme={{ colorScheme: themeContext as any}} withGlobalStyles withNormalizeCSS>
+            <MantineProvider theme={{ colorScheme: theme as any}} withGlobalStyles withNormalizeCSS>
                 {isInGame ? <GamePage
                     sendObstacle={(type) => {
                         sendToServer({type: MessageType.Obstacle, obstacle: type });
@@ -68,6 +80,10 @@ function App() {
                     sessionID={sessionID ? sessionID : -1}
                     code={code}
                     setCode={setCode}
+                    states={testStates}
+                    submitTest={(id) => {
+                        sendToServer({type: MessageType.Challenge, challengeID: 0, testID: id, code: code})
+                    }}
                 /> :
                 <HomePage
                     createRoom={
